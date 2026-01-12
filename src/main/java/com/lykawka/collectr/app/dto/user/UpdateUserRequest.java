@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UpdateUserRequest {
 
     @NotBlank(message = "Name is required")
-    private String name;
+    private String nickname;
 
     private Boolean active;
 }

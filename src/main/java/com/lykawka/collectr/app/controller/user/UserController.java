@@ -1,14 +1,17 @@
 package com.lykawka.collectr.app.controller.user;
 
+import com.lykawka.collectr.app.dto.user.AuthResponse;
 import com.lykawka.collectr.app.dto.user.CreateUserRequest;
+import com.lykawka.collectr.app.dto.user.LoginRequest;
 import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
-import com.lykawka.collectr.app.service.user.UserService;
+import com.lykawka.collectr.app.service.user.IUserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping
-    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<UserDTO>> findAll(
+            @PageableDefault(size = 20, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(userService.findAll(pageable));
     }
 
@@ -52,5 +56,11 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = userService.login(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(response);
     }
 }

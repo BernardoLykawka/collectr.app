@@ -1,5 +1,6 @@
 package com.lykawka.collectr.app.service.user;
 
+import com.lykawka.collectr.app.dto.user.AuthResponse;
 import com.lykawka.collectr.app.dto.user.CreateUserRequest;
 import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
@@ -8,6 +9,7 @@ import com.lykawka.collectr.app.exception.ValidationException;
 import com.lykawka.collectr.app.mapper.user.UserMapper;
 import com.lykawka.collectr.app.model.user.User;
 import com.lykawka.collectr.app.repository.user.UserRepository;
+import com.lykawka.collectr.app.security.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAll(Pageable pageable) {
@@ -49,7 +52,9 @@ public class UserService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ValidationException("Email already registered");
         }
-
+        if (userRepository.existsByNickname(request.getNickname())) {
+            throw new ValidationException("Nickname already registered");
+        }
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         
@@ -62,7 +67,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        user.setName(request.getName());
+        user.setNickname(request.getNickname());
         if (request.getActive() != null) {
             user.setActive(request.getActive());
         }
@@ -73,9 +78,29 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AuthResponse login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ValidationException("Invalid email or password"));
+
+        if (!user.getActive()) {
+            throw new ValidationException("User account is inactive");
         }
-        userRepository.deleteById(id);
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new ValidationException("Invalid email or password");
+        }
+
+        String token = jwtProvider.generateToken(user.getEmail(), user.getId());
+        UserDTO userDTO = userMapper.toDTO(user);
+
+        return new AuthResponse(token, "Bearer", jwtProvider.getExpirationTime(), userDTO);
     }
 }

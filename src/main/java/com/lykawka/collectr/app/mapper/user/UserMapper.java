@@ -13,7 +13,7 @@ public class UserMapper {
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .name(user.getName())
+                .nickname(user.getNickname())
                 .role(user.getRole())
                 .active(user.getActive())
                 .createdAt(user.getCreatedAt())
@@ -25,7 +25,7 @@ public class UserMapper {
         return User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .name(request.getName())
+                .nickname(request.getNickname())
                 .role(request.getRole())
                 .active(true)
                 .build();

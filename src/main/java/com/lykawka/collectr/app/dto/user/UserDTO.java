@@ -17,7 +17,7 @@ public class UserDTO {
     
     private Long id;
     private String email;
-    private String name;
+    private String nickname;
     private UserRole role;
     private Boolean active;
     private LocalDateTime createdAt;

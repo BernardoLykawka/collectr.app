@@ -53,7 +53,7 @@ class UserServiceTest {
         user = User.builder()
                 .email("test@example.com")
                 .password("encodedPassword")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .active(true)
                 .build();
@@ -62,7 +62,7 @@ class UserServiceTest {
         userDTO = UserDTO.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .active(true)
                 .build();
@@ -70,12 +70,12 @@ class UserServiceTest {
         createUserRequest = CreateUserRequest.builder()
                 .email("test@example.com")
                 .password("password123")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .build();
 
         updateUserRequest = UpdateUserRequest.builder()
-                .name("Updated Name")
+                .nickname("Updated Name")
                 .active(true)
                 .build();
     }
@@ -192,7 +192,7 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals("Updated Name", user.getName());
+        assertEquals("Updated Name", user.getNickname());
         verify(userRepository).findById(1L);
         verify(userRepository).save(user);
     }

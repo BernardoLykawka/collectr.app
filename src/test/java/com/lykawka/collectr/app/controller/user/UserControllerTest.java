@@ -13,13 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -53,7 +49,7 @@ class UserControllerTest {
         userDTO = UserDTO.builder()
                 .id(1L)
                 .email("test@example.com")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .active(true)
                 .build();
@@ -61,12 +57,12 @@ class UserControllerTest {
         createUserRequest = CreateUserRequest.builder()
                 .email("test@example.com")
                 .password("password123")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .build();
 
         updateUserRequest = UpdateUserRequest.builder()
-                .name("Updated Name")
+                .nickname("Updated Name")
                 .active(true)
                 .build();
 

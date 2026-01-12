@@ -21,11 +21,12 @@ public class User extends BaseEntity {
     private String password;
 
     @Column(nullable = false)
-    private String name;
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
 }

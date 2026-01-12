@@ -28,7 +28,7 @@ class UserRepositoryTest {
         user = User.builder()
                 .email("test@example.com")
                 .password("encodedPassword")
-                .name("Test User")
+                .nickname("Test User")
                 .role(UserRole.USER)
                 .active(true)
                 .build();
@@ -42,7 +42,7 @@ class UserRepositoryTest {
 
         assertTrue(found.isPresent());
         assertEquals(user.getEmail(), found.get().getEmail());
-        assertEquals(user.getName(), found.get().getName());
+        assertEquals(user.getNickname(), found.get().getNickname());
     }
 
     @Test
@@ -74,7 +74,7 @@ class UserRepositoryTest {
 
         assertNotNull(savedUser.getId());
         assertEquals(user.getEmail(), savedUser.getEmail());
-        assertEquals(user.getName(), savedUser.getName());
+        assertEquals(user.getNickname(), savedUser.getNickname());
         assertEquals(user.getRole(), savedUser.getRole());
         assertTrue(savedUser.getActive());
     }
@@ -105,11 +105,11 @@ class UserRepositoryTest {
     void update_ShouldUpdateUserData() {
         User savedUser = userRepository.save(user);
 
-        savedUser.setName("Updated Name");
+        savedUser.setNickname("Updated Name");
         savedUser.setActive(false);
         User updatedUser = userRepository.save(savedUser);
 
-        assertEquals("Updated Name", updatedUser.getName());
+        assertEquals("Updated Name", updatedUser.getNickname());
         assertFalse(updatedUser.getActive());
     }
 }
