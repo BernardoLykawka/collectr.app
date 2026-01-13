@@ -14,15 +14,25 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // Permitir rotas públicas
+        String path = request.getRequestURI();
+        if (path.equals("/api/users/login") || path.equals("/api/users") && request.getMethod().equals("POST")) {
+            return true;
+        }
+        
         String token = extractToken(request);
         
-        if (token != null && jwtProvider.validateToken(token)) {
-            Long userId = jwtProvider.getUserIdFromToken(token);
-            String email = jwtProvider.getEmailFromToken(token);
-            
-            request.setAttribute("userId", userId);
-            request.setAttribute("email", email);
+        if (token == null || !jwtProvider.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Authentication token is invalid or missing\"}");
+            return false;
         }
+        
+        Long userId = jwtProvider.getUserIdFromToken(token);
+        String email = jwtProvider.getEmailFromToken(token);
+        
+        request.setAttribute("userId", userId);
+        request.setAttribute("email", email);
         
         return true;
     }

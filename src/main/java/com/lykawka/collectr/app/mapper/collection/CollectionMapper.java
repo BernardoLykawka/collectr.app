@@ -30,7 +30,6 @@ public class CollectionMapper {
                 .collectionType(request.getCollectionType())
                 .isPublic(request.getIsPublic())
                 .status(request.getStatus() != null ? request.getStatus() : 0)
-                .userId(request.getUserId())
                 .build();
     }
 }

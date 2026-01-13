@@ -90,4 +90,36 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+            org.springframework.http.converter.HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+
+        String message = ex.getMostSpecificCause() != null
+                ? ex.getMostSpecificCause().getMessage()
+                : "Invalid request body";
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(java.time.LocalDateTime.now())
+                .status(org.springframework.http.HttpStatus.BAD_REQUEST.value())
+                .error(org.springframework.http.HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(message)
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+            org.springframework.dao.DataIntegrityViolationException ex,
+            HttpServletRequest request) {
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(java.time.LocalDateTime.now())
+                .status(org.springframework.http.HttpStatus.BAD_REQUEST.value())
+                .error(org.springframework.http.HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("Invalid data or constraint violation")
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(error);
+    }
 }

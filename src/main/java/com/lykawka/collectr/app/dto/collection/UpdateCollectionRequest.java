@@ -26,6 +26,4 @@ public class UpdateCollectionRequest {
     @NotNull(message = "Collection Type is required")
     private CollectionType collectionType;
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
 }

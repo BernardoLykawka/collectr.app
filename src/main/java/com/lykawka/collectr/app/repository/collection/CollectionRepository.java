@@ -12,6 +12,8 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
 
     Page<Collection> findAllByUserId(Pageable pageable, Long userId);
 
+    Page<Collection> findAllByIsPublicTrue(Pageable pageable);
+
     boolean existsByNameAndUserId(String name, Long userId);
     
 }

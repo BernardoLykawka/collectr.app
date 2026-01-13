@@ -12,12 +12,14 @@ public interface ICollectionService {
 
     Page<CollectionDTO> findAllByUserId(Pageable pageable, Long userId);
 
-    CollectionDTO findById(Long id);
+    Page<CollectionDTO> findAllPublic(Pageable pageable);
 
-    CollectionDTO create(CreateCollectionRequest request);
+    CollectionDTO findById(Long id, Long userId);
 
-    CollectionDTO update(Long id, UpdateCollectionRequest request);
+    CollectionDTO create(CreateCollectionRequest request, Long userId);
 
-    void delete(Long id);
+    CollectionDTO update(Long id, UpdateCollectionRequest request, Long userId);
+
+    void delete(Long id, Long userId);
 
 }
