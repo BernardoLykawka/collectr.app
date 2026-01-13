@@ -63,7 +63,6 @@ class UserControllerTest {
 
         updateUserRequest = UpdateUserRequest.builder()
                 .nickname("Updated Name")
-                .active(true)
                 .build();
 
     }

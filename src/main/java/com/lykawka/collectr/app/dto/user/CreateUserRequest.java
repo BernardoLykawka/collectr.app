@@ -26,7 +26,7 @@ public class CreateUserRequest {
              message = "Password must be at least 8 characters long and include uppercase, lowercase, number")
     private String password;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Nickname is required")
     private String nickname;
 
     @NotNull(message = "Role is required")

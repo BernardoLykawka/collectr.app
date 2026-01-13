@@ -55,7 +55,6 @@ class UserServiceTest {
                 .password("encodedPassword")
                 .nickname("Test User")
                 .role(UserRole.USER)
-                .active(true)
                 .build();
         user.setId(1L);
 
@@ -76,7 +75,6 @@ class UserServiceTest {
 
         updateUserRequest = UpdateUserRequest.builder()
                 .nickname("Updated Name")
-                .active(true)
                 .build();
     }
 

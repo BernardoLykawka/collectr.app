@@ -27,7 +27,6 @@ public class UserMapper {
                 .password(request.getPassword())
                 .nickname(request.getNickname())
                 .role(request.getRole())
-                .active(true)
                 .build();
     }
 }
