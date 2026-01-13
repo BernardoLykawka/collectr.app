@@ -50,6 +50,9 @@ public class CollectionService implements ICollectionService {
 
     @Transactional
     public Page<CollectionDTO> findAllPublic(Pageable pageable) {
+        if(pageable == null) {
+            pageable = Pageable.unpaged();
+        }
         return collectionRepository.findAllByIsPublicTrue(pageable)
                 .map(collectionMapper::toDTO);
     }

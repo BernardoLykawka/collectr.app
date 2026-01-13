@@ -1,5 +1,6 @@
 package com.lykawka.collectr.app.controller.collection;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class CollectionController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> findAll(
+    public ResponseEntity<Page<CollectionDTO>> findAllPublic(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
         return ResponseEntity.ok(collectionService.findAllPublic(
@@ -45,7 +46,7 @@ public class CollectionController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<?> findMyCollections(
+    public ResponseEntity<Page<CollectionDTO>> findMyCollections(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size,
             HttpServletRequest httpRequest) {

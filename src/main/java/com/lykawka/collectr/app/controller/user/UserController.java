@@ -7,6 +7,7 @@ import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
 import com.lykawka.collectr.app.service.user.IUserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("Users")
+@RestController
+@Tag(name = "Users")
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {

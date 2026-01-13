@@ -19,7 +19,7 @@ public class CreateCollectionRequest {
 
     private String description;
 
-    @NotNull(message = "isPublic is required")
+    @NotNull(message = "Public status is required")
     private Boolean isPublic;
 
     private Integer status;

@@ -19,6 +19,7 @@ public class UpdateCollectionRequest {
 
     private String description;
 
+    @NotNull(message = "Public status is required")
     private Boolean isPublic;
 
     private Integer status;
