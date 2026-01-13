@@ -7,16 +7,16 @@ import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
 import com.lykawka.collectr.app.service.user.IUserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Users")
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
@@ -25,8 +25,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserDTO>> findAll(
-            @PageableDefault(size = 20, sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(userService.findAll(pageable));
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+        return ResponseEntity.ok(userService.findAll(
+                org.springframework.data.domain.PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")

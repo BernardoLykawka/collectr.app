@@ -14,6 +14,4 @@ public class UpdateUserRequest {
 
     @NotBlank(message = "Name is required")
     private String nickname;
-
-    private Boolean active;
 }

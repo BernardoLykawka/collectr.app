@@ -30,7 +30,6 @@ class UserRepositoryTest {
                 .password("encodedPassword")
                 .nickname("Test User")
                 .role(UserRole.USER)
-                .active(true)
                 .build();
     }
 

@@ -4,6 +4,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,12 +19,20 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Collectr API")
                         .version("1.0.0")
-                        .description("API REST para gerenciamento do Collectr")
+                        .description("REST API for managing Collectr")
                         .contact(new Contact()
                                 .name("Bernardo Lykawka")
                                 .email("bernardolmsilvas@gmail.com"))
                         .license(new License()
                                 .name("MIT License")
-                                .url("https://opensource.org/licenses/MIT")));
+                                .url("https://opensource.org/licenses/MIT")))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Authentication",
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("Insert JWT token. Example: eyJhbGc...")));
     }
 }

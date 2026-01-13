@@ -23,4 +23,7 @@ public abstract class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private Boolean active = true;
 }

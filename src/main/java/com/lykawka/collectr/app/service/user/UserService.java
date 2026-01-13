@@ -64,13 +64,13 @@ public class UserService implements IUserService {
 
     @Transactional
     public UserDTO update(Long id, UpdateUserRequest request) {
+        if (userRepository.existsByNickname(request.getNickname())) {
+            throw new ValidationException("Nickname already registered");
+        }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         user.setNickname(request.getNickname());
-        if (request.getActive() != null) {
-            user.setActive(request.getActive());
-        }
 
         User updatedUser = userRepository.save(user);
         return userMapper.toDTO(updatedUser);
@@ -84,7 +84,6 @@ public class UserService implements IUserService {
         userRepository.save(user);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public AuthResponse login(String email, String password) {
         User user = userRepository.findByEmail(email)
