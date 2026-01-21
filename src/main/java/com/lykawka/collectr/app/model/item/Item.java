@@ -1,7 +1,5 @@
 package com.lykawka.collectr.app.model.item;
 
-import java.util.Date;
-
 import com.lykawka.collectr.app.model.BaseEntity;
 import com.lykawka.collectr.app.model.collection.Collection;
 

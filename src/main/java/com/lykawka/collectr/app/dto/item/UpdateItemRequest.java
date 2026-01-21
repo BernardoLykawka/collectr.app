@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateItemRequest {
+public class UpdateItemRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -34,7 +34,4 @@ public class CreateItemRequest {
     private Double estimatedValue;
 
     private Double purchasePrice;
-
-    @NotNull(message = "Collection ID is required")
-    private Long collectionId;
 }
