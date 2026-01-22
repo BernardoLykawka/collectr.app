@@ -21,7 +21,7 @@ public class CreateCollectionRequest {
 
     @NotNull(message = "Public status is required")
     private Boolean isPublic;
-
+    
     private Integer status;
 
     @NotNull(message = "Collection Type is required")
