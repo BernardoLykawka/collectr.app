@@ -48,7 +48,7 @@ export function LoginForm({
                       <FieldLabel htmlFor="password">Password</FieldLabel>
                       <a
                         href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline hover:cursor-pointer"
                       >
                         Forgot your password?
                       </a>
@@ -62,7 +62,7 @@ export function LoginForm({
                       <button
                         type="button"
                         onClick={onSwitchToSignup}
-                        className="font-medium text-teal-600 hover:text-teal-700 underline-offset-4 hover:underline"
+                        className="font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline hover:cursor-pointer"
                       >
                         Sign up
                       </button>

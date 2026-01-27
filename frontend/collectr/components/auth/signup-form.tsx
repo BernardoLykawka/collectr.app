@@ -53,7 +53,7 @@ export function SignupForm({ onSwitchToLogin, ...props }: SignupFormProps) {
                       <button
                         type="button"
                         onClick={onSwitchToLogin}
-                        className="font-medium text-teal-600 hover:text-teal-700 underline-offset-4 hover:underline"
+                        className="hover:cursor-pointer font-medium text-primary hover:text-primary/80 underline-offset-4 hover:underline"
                       >
                         Log in
                       </button>
