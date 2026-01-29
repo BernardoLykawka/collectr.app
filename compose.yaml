@@ -20,7 +20,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: collectr-app
     environment:
@@ -35,6 +35,19 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - collectr-network
+
+  frontend:
+    profiles: ["frontend"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: collectr-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
     networks:
       - collectr-network
 
