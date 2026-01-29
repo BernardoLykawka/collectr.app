@@ -7,9 +7,27 @@ import { Label } from "../ui/label";
 import { AuthModal } from "../auth/auth-modal";
 import { Moon, Sun } from "lucide-react";
 import { useHeader } from "./hook";
+import { useAuth } from "@/contexts/auth-context";
+import { LogoutConfirmModal } from "@/components/auth/logout-confirm-modal";
+import { useState } from "react";
 
 export default function Header() {
   const { isModalOpen, openModal, closeModal, theme, toggleTheme } = useHeader();
+  const { isAuthenticated, logout } = useAuth();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
+  const handleLogout = () => {
+    setIsLogoutOpen(true);
+  };
+
+  const confirmLogout = () => {
+    logout();
+    setIsLogoutOpen(false);
+  };
+
+  const cancelLogout = () => {
+    setIsLogoutOpen(false);
+  };
   return (
     <header className="bg-background shadow-xs border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,15 +49,27 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="sm:flex sm:gap-4">
-                <Button 
-                  variant="default" 
+            {!isAuthenticated ? (
+              <div className="sm:flex sm:gap-4">
+                <Button
+                  variant="default"
                   className="md:inline-flex"
                   onClick={openModal}
                 >
                   Login
                 </Button>
-            </div>
+              </div>
+            ) : (
+              <div className="sm:flex sm:gap-4">
+                <Button
+                  variant="default"
+                  className="md:inline-flex"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
+            )}
 
             <Button
               type="button"
@@ -58,6 +88,11 @@ export default function Header() {
         </div>
       </div>
       <AuthModal isOpen={isModalOpen} onClose={closeModal} />
+      <LogoutConfirmModal
+        isOpen={isLogoutOpen}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </header>
   );
 }
