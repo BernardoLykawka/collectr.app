@@ -1,11 +1,11 @@
-import { BookOpen, RectangleVertical, Film, Footprints, Gamepad2, LucideIcon, Package, Puzzle, Sticker, Palette, Stamp, Coins } from "lucide-react";
+import { BookOpen, RectangleVertical, Film, Footprints, Gamepad2, LucideIcon, Package, Puzzle, Palette, Stamp, Coins, Shirt } from "lucide-react";
 
 export enum CollectionType {
     COINS = "Coins",
     STAMPS = "Stamps",
     CARDS = "Cards",
     GAMES = "Games",
-    FIGURINES = "Figurines",
+    SHIRTS = "Shirts",
     TOYS = "Toys",
     BOOKS = "Books",
     ARTWORKS = "Artworks",
@@ -19,7 +19,7 @@ export const typeIcons: Partial<Record<CollectionType, LucideIcon>> = {
     [CollectionType.STAMPS]: Stamp,
     [CollectionType.CARDS]: RectangleVertical,
     [CollectionType.GAMES]: Gamepad2,
-    [CollectionType.FIGURINES]: Sticker,
+    [CollectionType.SHIRTS]: Shirt,
     [CollectionType.TOYS]: Puzzle,
     [CollectionType.BOOKS]: BookOpen,
     [CollectionType.ARTWORKS]: Palette, 

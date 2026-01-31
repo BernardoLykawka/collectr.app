@@ -5,7 +5,7 @@ public enum CollectionType {
     STAMPS,
     CARDS,
     GAMES,
-    FIGURINES,
+    SHIRTS,
     TOYS,
     BOOKS,
     ARTWORKS,
