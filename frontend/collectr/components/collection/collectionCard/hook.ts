@@ -1,4 +1,4 @@
-import { CollectionType, typeIcons } from "@/types/CollectionType";
+import { CollectionType, typeIcons, typeColors } from "@/types/CollectionType";
 import {
 	LucideIcon,
 	Lock,
@@ -40,12 +40,14 @@ function getVisibilityIcon(isPublic: boolean): LucideIcon {
   return isPublic ? Unlock : Lock;
 }
 
+
 export function useCollectionCard(collection: CollectionProps["collection"]) {
 	const lastEditedText = formatDate(collection.updatedAt ?? collection.createdAt);
 	const visibilityLabel = collection.isPublic ? "Public" : "Private";
 	const VisibilityIcon = getVisibilityIcon(collection.isPublic);
 	const typeLabel = toTitle(String(collection.collectionType));
 	const TypeIcon = getTypeIcon(collection.collectionType);
+	const typeColor = typeColors[collection.collectionType] ?? "#6B7280";
 	const initials = getInitials(collection.name, collection.user.nickname);
 	const description = collection.description?.trim() || "No description provided yet.";
 
@@ -55,6 +57,7 @@ export function useCollectionCard(collection: CollectionProps["collection"]) {
 		VisibilityIcon,
 		typeLabel,
 		TypeIcon,
+		typeColor,
 		initials,
 		description,
 	};
