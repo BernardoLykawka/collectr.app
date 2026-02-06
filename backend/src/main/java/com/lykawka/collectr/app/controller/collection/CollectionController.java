@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,11 +34,22 @@ public class CollectionController {
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Collection created"),
             @ApiResponse(responseCode = "400", description = "Validation error"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "409", description = "Conflict: Collection with the same name already exists")
         })
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Collection data",
-            required = true)
+            required = true,
+            content = @Content(
+                examples = {
+                    @ExampleObject(
+                        name = "Default",
+                        summary = "Example collection",
+                        value = "{ \"name\": \"Example Coins Collection\", \"description\": \"This is an example collection.\", \"isPublic\": true, \"status\": \"100\", \"collectionType\": \"COINS\" }"
+                    )
+                }
+            )
+        )
     public ResponseEntity<CollectionDTO> create(
             @Valid @RequestBody CreateCollectionRequest request,
             HttpServletRequest httpRequest) {

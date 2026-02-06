@@ -4,6 +4,7 @@ import com.lykawka.collectr.app.dto.user.AuthResponse;
 import com.lykawka.collectr.app.dto.user.CreateUserRequest;
 import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
+import com.lykawka.collectr.app.exception.ConflictException;
 import com.lykawka.collectr.app.exception.ResourceNotFoundException;
 import com.lykawka.collectr.app.exception.ValidationException;
 import com.lykawka.collectr.app.mapper.user.UserMapper;
@@ -50,10 +51,10 @@ public class UserService implements IUserService {
     @Transactional
     public UserDTO create(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new ValidationException("Email already registered");
+            throw new ConflictException("Email already registered");
         }
         if (userRepository.existsByNickname(request.getNickname())) {
-            throw new ValidationException("Nickname already registered");
+            throw new ConflictException("Nickname already registered");
         }
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -65,7 +66,7 @@ public class UserService implements IUserService {
     @Transactional
     public UserDTO update(Long id, UpdateUserRequest request) {
         if (userRepository.existsByNickname(request.getNickname())) {
-            throw new ValidationException("Nickname already registered");
+            throw new ConflictException("Nickname already registered");
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));

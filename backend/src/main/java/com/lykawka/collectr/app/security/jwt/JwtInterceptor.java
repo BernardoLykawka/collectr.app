@@ -16,7 +16,10 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String path = request.getRequestURI();
-        if (path.equals("/api/users/login") || path.equals("/api/collections") || (path.equals("/api/users") && request.getMethod().equals("POST"))) {
+        if (path.equals("/api/users/login") || (path.equals("/api/users") && request.getMethod().equals("POST"))) {
+            return true;
+        }
+        if (path.equals("/api/collections") && request.getMethod().equals("GET")) {
             return true;
         }
         

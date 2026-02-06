@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,17 @@ public class ItemController {
         })
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Item data",
-            required = true)
+            required = true,
+            content = @Content(
+                examples = {
+                    @ExampleObject(
+                        name = "Default",
+                        summary = "Example item",
+                        value = "{ \"name\": \"Example Coin\", \"description\": \"This is an example coin.\", \"collectionId\": 1, \"imageUrl\": \"https://www.londonmintoffice.org/images/stories/sn/kciii-gsk-fairmined-gold-layered-coin/X308_GSTK_NNA_2023_Primary_Webshop_Images_PPU.png\", \"manufacturer\": \"Example Brand\", \"releaseYear\": 1900, \"condition\": \"MINT\", \"situation\": \"OWNED\", \"purchasePrice\": 100.0, \"estimatedValue\": 150.0 }"
+                    )
+                }
+            )
+        )
     public ResponseEntity<ItemDTO> create(
             @Valid @RequestBody CreateItemRequest request,
             HttpServletRequest httpRequest) {

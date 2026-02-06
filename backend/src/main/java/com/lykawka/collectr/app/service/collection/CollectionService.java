@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.lykawka.collectr.app.dto.collection.CollectionDTO;
 import com.lykawka.collectr.app.dto.collection.CreateCollectionRequest;
 import com.lykawka.collectr.app.dto.collection.UpdateCollectionRequest;
+import com.lykawka.collectr.app.exception.ConflictException;
 import com.lykawka.collectr.app.exception.ResourceNotFoundException;
 import com.lykawka.collectr.app.exception.ValidationException;
 import com.lykawka.collectr.app.mapper.collection.CollectionMapper;
@@ -68,7 +69,7 @@ public class CollectionService implements ICollectionService {
         }
 
         if (collectionRepository.existsByNameAndUserId(request.getName(), userId)) {
-            throw new ValidationException("Collection with the same name already exists for this user");
+            throw new ConflictException("Collection with the same name already exists for this user");
         }
         
         Collection collection = collectionMapper.toEntity(request);
