@@ -6,14 +6,34 @@ import { useCollectionCard } from "./hook";
 import CircularProgress from "@/components/ui/circular-progress";
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function CollectionCard({ collection }: CollectionProps) {
+    const { isAuthenticated, isLoading } = useAuth();
     const { lastEditedText, visibilityLabel, VisibilityIcon, TypeIcon, typeColor, description } = useCollectionCard(collection);
     const router = useRouter();
 
     const handleCardClick = () => {
         router.push(`/collection/${collection.id}`);
     };
+
+    if (isLoading) {
+        return (
+            <div className="w-full max-w-4xl mx-auto">
+                <Label className="mb-2 text-lg font-semibold flex">Last Edited Collection</Label>
+                <p className="text-sm text-muted-foreground text-center py-12">Loading...</p>
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) {
+        return (
+            <div className="w-full max-w-4xl mx-auto">
+                <Label className="mb-2 text-lg font-semibold flex">Last Edited Collection</Label>
+                <p className="text-sm text-muted-foreground text-center py-12">Please log in to view your last edited collection.</p>
+            </div>
+        );
+    }
 
     return (
     <div>
@@ -26,7 +46,7 @@ export default function CollectionCard({ collection }: CollectionProps) {
                 <div className="flex items-center">
                     <div className="flex flex-col gap-1">
                         <p className="text-lg font-semibold leading-tight">{collection.name}</p>
-                        <p className="text-sm text-muted-foreground">by {collection.user.nickname}</p>
+                        <p className="text-sm text-muted-foreground">by {collection.userId}</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 text-right">

@@ -3,10 +3,20 @@ import type { CollectionProps } from "@/components/collection/collectionCard/col
 
 export type Collection = CollectionProps["collection"];
 
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+}
+
 export const collectionService = {
-  async getCollections(): Promise<Collection[]> {
-    const response = await apiFetch<Collection[]>("/collections");
-    return response || [];
+  async getCollections(page: number = 0, size: number = 6): Promise<PaginatedResponse<Collection>> {
+    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections?page=${page}&size=${size}`);
+    return response;
   },
 
   async getCollectionById(id: string): Promise<Collection> {
@@ -49,8 +59,8 @@ export const collectionService = {
     });
   },
 
-  async getUserCollections(): Promise<Collection[]> {
-    const response = await apiFetch<Collection[]>("/collections/my");
-    return response || [];
+  async getUserCollections(page: number = 0, size: number = 6): Promise<PaginatedResponse<Collection>> {
+    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections/my?page=${page}&size=${size}`);
+    return response;
   },
 };

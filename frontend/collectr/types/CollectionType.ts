@@ -1,17 +1,17 @@
 import { BookOpen, RectangleVertical, Film, Footprints, Gamepad2, LucideIcon, Package, Puzzle, Palette, Stamp, Coins, Shirt } from "lucide-react";
 
 export enum CollectionType {
-    COINS = "Coins" ,
-    STAMPS = "Stamps",
-    CARDS = "Cards",
-    GAMES = "Games",
-    SHIRTS = "Shirts",
-    TOYS = "Toys",
-    BOOKS = "Books",
-    ARTWORKS = "Artworks",
-    SNEAKERS = "Sneakers",
-    FILMS = "Films",
-    OTHERS = "Others"
+    COINS = "COINS",
+    STAMPS = "STAMPS",
+    CARDS = "CARDS",
+    GAMES = "GAMES",
+    SHIRTS = "SHIRTS",
+    TOYS = "TOYS",
+    BOOKS = "BOOKS",
+    ARTWORKS = "ARTWORKS",
+    SNEAKERS = "SNEAKERS",
+    FILMS = "FILMS",
+    OTHERS = "OTHERS"
 }
 
 export const typeIcons: Partial<Record<CollectionType, LucideIcon>> = {

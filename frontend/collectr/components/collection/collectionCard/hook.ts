@@ -48,7 +48,7 @@ export function useCollectionCard(collection: CollectionProps["collection"]) {
 	const typeLabel = toTitle(String(collection.collectionType));
 	const TypeIcon = getTypeIcon(collection.collectionType);
 	const typeColor = typeColors[collection.collectionType] ?? "#6B7280";
-	const initials = getInitials(collection.name, collection.user.nickname);
+	const initials = getInitials(collection.name, collection.userId);
 	const description = collection.description?.trim() || "No description provided yet.";
 
 	return {

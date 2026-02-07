@@ -23,7 +23,7 @@ export default function CollectionCard({ collection }: CollectionProps) {
                 <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-col gap-1 flex-1 min-w-0">
                         <p className="text-base font-semibold leading-tight truncate">{collection.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">by {collection.user.nickname}</p>
+                        <p className="text-xs text-muted-foreground truncate">by {collection.userId}</p>
                     </div>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent-foreground shrink-0">
                         <VisibilityIcon className="h-3 w-3" aria-hidden />

@@ -8,13 +8,12 @@ import { CollectionProps } from "./collectionInterface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { collectionService } from "@/lib/collection-service";
 
-interface CollectionCardListProps {
-    itemsPerPage?: number;
-}
+const itemsPerPage = 6;
 
-export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardListProps) {
+export default function PublicCollectionCardList() {
     const [collections, setCollections] = useState<CollectionProps["collection"][]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -22,8 +21,9 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
         const fetchCollections = async () => {
             try {
                 setLoading(true);
-                const data = await collectionService.getCollections();
-                setCollections(data);
+                const data = await collectionService.getCollections(currentPage, itemsPerPage);
+                setCollections(data.content);
+                setTotalPages(data.totalPages);
                 setError(null);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to load collections");
@@ -34,19 +34,14 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
         };
 
         fetchCollections();
-    }, []);
-
-    const totalPages = Math.ceil(collections.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentCollections = collections.slice(startIndex, endIndex);
+    }, [currentPage]);
 
     const goToNextPage = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
     };
 
     const goToPreviousPage = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
+        setCurrentPage((prev) => Math.max(prev - 1, 0));
     };
 
     const goToPage = (page: number) => {
@@ -85,7 +80,7 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
             <Label className="mb-4 text-lg font-semibold flex">Collections</Label>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {currentCollections.map((collection) => (
+                {collections.map((collection) => (
                     <CollectionCard key={collection.id} collection={collection} />
                 ))}
             </div>
@@ -96,22 +91,23 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
                         variant="outline"
                         size="sm"
                         onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
+                        disabled={currentPage === 0}
                     >
                         <ChevronLeft className="h-4 w-4" />
                         Previous
                     </Button>
 
                     <div className="flex items-center gap-1">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                        {Array.from({ length: totalPages }, (_, i) => i).map((page) => {
+                            const displayPage = page + 1;
                             const showPage =
-                                page === 1 ||
-                                page === totalPages ||
+                                page === 0 ||
+                                page === totalPages - 1 ||
                                 (page >= currentPage - 1 && page <= currentPage + 1);
 
                             const showEllipsis =
-                                (page === currentPage - 2 && currentPage > 3) ||
-                                (page === currentPage + 2 && currentPage < totalPages - 2);
+                                (page === currentPage - 2 && currentPage > 2) ||
+                                (page === currentPage + 2 && currentPage < totalPages - 3);
 
                             if (showEllipsis) {
                                 return (
@@ -131,7 +127,7 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
                                     onClick={() => goToPage(page)}
                                     className="min-w-10"
                                 >
-                                    {page}
+                                    {displayPage}
                                 </Button>
                             );
                         })}
@@ -141,7 +137,7 @@ export default function CollectionCardList({ itemsPerPage = 9 }: CollectionCardL
                         variant="outline"
                         size="sm"
                         onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
+                        disabled={currentPage === totalPages - 1}
                     >
                         Next
                         <ChevronRight className="h-4 w-4" />
