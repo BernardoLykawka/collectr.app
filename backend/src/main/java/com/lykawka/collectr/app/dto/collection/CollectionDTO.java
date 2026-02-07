@@ -16,6 +16,7 @@ public class CollectionDTO {
     
     private Long id;
     private Long userId;
+    private String userNickname;
     private String name;
     private String description;
     private Boolean isPublic;

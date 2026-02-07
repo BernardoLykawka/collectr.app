@@ -12,6 +12,7 @@ public class CollectionMapper {
         return CollectionDTO.builder()
                 .id(collection.getId())
                 .userId(collection.getUserId())
+                .userNickname(collection.getUser() != null ? collection.getUser().getNickname() : null)
                 .name(collection.getName())
                 .description(collection.getDescription())
                 .active(collection.getActive())
