@@ -1,5 +1,7 @@
 package com.lykawka.collectr.app.repository.collection;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +17,7 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
     Page<Collection> findAllByIsPublicTrue(Pageable pageable);
 
     boolean existsByNameAndUserId(String name, Long userId);
+
+    Optional<Collection> findFirstByUserIdAndActiveTrueOrderByUpdatedAtDesc(Long userId);
     
 }

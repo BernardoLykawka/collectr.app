@@ -115,4 +115,11 @@ public class CollectionService implements ICollectionService {
         collectionRepository.save(collection);
     }
 
+    @Transactional
+    public CollectionDTO getLastEditedCollection(Long userId) {
+        Collection collection = collectionRepository.findFirstByUserIdAndActiveTrueOrderByUpdatedAtDesc(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No active collections found for this user"));
+        return collectionMapper.toDTO(collection);
+    }
+
 }

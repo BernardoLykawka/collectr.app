@@ -110,6 +110,21 @@ public class CollectionController {
                 org.springframework.data.domain.PageRequest.of(page, size), userId));
     }
 
+    @GetMapping("/my/last-edited")
+        @Operation(
+            summary = "Get last edited collection",
+            description = "Returns the most recently edited collection for the authenticated user.")
+        @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Collection found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "No active collections found")
+        })
+    public ResponseEntity<CollectionDTO> getLastEditedCollection(
+            HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ResponseEntity.ok(collectionService.getLastEditedCollection(userId));
+    }
+
     @PutMapping("/{id}")
         @Operation(
             summary = "Update collection",
