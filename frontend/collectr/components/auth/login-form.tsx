@@ -38,10 +38,9 @@ export function LoginForm({
   } = useLoginForm({ onSuccess });
 
   return (
-    <div className="flex w-full justify-end animate-in slide-in-from-right-8 fade-in duration-500">
-      <div className="w-full max-w-sm">
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-          <Card>
+    <div className="w-full max-w-sm animate-in slide-in-from-right-8 fade-in duration-500">
+      <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <Card>
             <CardHeader>
               <CardTitle>Login to your account</CardTitle>
             </CardHeader>
@@ -107,7 +106,6 @@ export function LoginForm({
             </CardContent>
           </Card>
         </div>
-      </div>
     </div>
   );
 }

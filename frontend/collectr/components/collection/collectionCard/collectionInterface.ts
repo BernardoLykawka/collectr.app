@@ -9,6 +9,7 @@ export interface CollectionProps {
         description?: string;
         isPublic: boolean;
         userId: string;
+        userNickname: string;
         status: number;
         collectionType: CollectionType;
     };

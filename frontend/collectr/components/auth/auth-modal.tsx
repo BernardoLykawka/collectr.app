@@ -21,7 +21,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   };
 
   return (
-        <div className="fixed inset-0 flex items-end justify-end z-50 bg-black/30 px-8 py-4 md:px-16" onClick={handleBackdropClick}>
+        <div className="fixed inset-0 flex items-end justify-end z-50 bg-black/60 px-8 py-4 md:px-16" onClick={handleBackdropClick}>
           {activeTab === "login" ? (
             <LoginForm
               onSwitchToSignup={() => setActiveTab("signup")}

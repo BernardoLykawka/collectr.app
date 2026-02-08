@@ -63,4 +63,9 @@ export const collectionService = {
     const response = await apiFetch<PaginatedResponse<Collection>>(`/collections/my?page=${page}&size=${size}`);
     return response;
   },
+
+  async getLastEditedCollection(): Promise<Collection> {
+    const response = await apiFetch<Collection>("/collections/my/last-edited");
+    return response;
+  },
 };

@@ -23,7 +23,7 @@ export default function CollectionCard({ collection }: CollectionProps) {
                 <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-col gap-1 flex-1 min-w-0">
                         <p className="text-base font-semibold leading-tight truncate">{collection.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">by {collection.userId}</p>
+                        <p className="text-xs text-muted-foreground truncate">by {collection.userNickname}</p>
                     </div>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent-foreground shrink-0">
                         <VisibilityIcon className="h-3 w-3" aria-hidden />
@@ -40,9 +40,7 @@ export default function CollectionCard({ collection }: CollectionProps) {
                         <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium" style={{ backgroundColor: `${typeColor}20`, color: typeColor }}>
                             <TypeIcon className="h-3.5 w-3.5" />
                         </span>
-                        <span className="inline-flex items-center rounded-full border border-border/70 px-2 py-1">
-                            <CircularProgress value={collection.status ?? 0} size={16} strokeWidth={1.2}/>
-                        </span>
+                        <CircularProgress value={collection.status ?? 0} size={16} strokeWidth={1.2}/>
                     </div>
                     <span className="text-xs text-muted-foreground">{lastEditedText}</span>
                 </div>

@@ -3,14 +3,18 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
-import CollectionCard from "./collectionCard";
-import { CollectionProps } from "./collectionInterface";
+import CollectionCard from "../collectionCard";
+import { CollectionProps } from "../collectionInterface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { collectionService } from "@/lib/collection-service";
+import { useAuth } from "@/contexts/auth-context";
+import LoginRequiredState from "@/components/collection/emptyState/loginRequiredState";
+import LastEditedEmptyState from "@/components/collection/emptyState/lastEditedEmpty";
 
 const itemsPerPage = 6;
 
-export default function PublicCollectionCardList() {
+export default function MyCollectionCardList() {
+    const { isAuthenticated, isLoading: authLoading } = useAuth();
     const [collections, setCollections] = useState<CollectionProps["collection"][]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -19,9 +23,14 @@ export default function PublicCollectionCardList() {
 
     useEffect(() => {
         const fetchCollections = async () => {
+            if (!isAuthenticated) {
+                setLoading(false);
+                return;
+            }
+
             try {
                 setLoading(true);
-                const data = await collectionService.getCollections(currentPage, itemsPerPage);
+                const data = await collectionService.getUserCollections(currentPage, itemsPerPage);
                 setCollections(data.content);
                 setTotalPages(data.totalPages);
                 setError(null);
@@ -33,8 +42,10 @@ export default function PublicCollectionCardList() {
             }
         };
 
-        fetchCollections();
-    }, [currentPage]);
+        if (!authLoading) {
+            fetchCollections();
+        }
+    }, [currentPage, isAuthenticated, authLoading]);
 
     const goToNextPage = () => {
         setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
@@ -48,19 +59,26 @@ export default function PublicCollectionCardList() {
         setCurrentPage(page);
     };
 
-    if (loading) {
+    if (authLoading || loading) {
         return (
-            <div className="w-full max-w-7xl mx-auto">
-                <Label className="mb-4 text-lg font-semibold flex">Collections</Label>
+            <div className="w-full max-w-4xl mx-auto">
+                <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
                 <p className="text-sm text-muted-foreground text-center py-12">Loading collections...</p>
             </div>
         );
     }
 
+    if (!isAuthenticated) {
+        return <div className="w-full max-w-4xl mx-auto">
+            <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
+            <LoginRequiredState />
+        </div>;
+    }
+
     if (error) {
         return (
-            <div className="w-full max-w-7xl mx-auto">
-                <Label className="mb-4 text-lg font-semibold flex">Collections</Label>
+            <div className="w-full max-w-4xl mx-auto">
+                <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
                 <p className="text-sm text-destructive text-center py-12">{error}</p>
             </div>
         );
@@ -69,15 +87,15 @@ export default function PublicCollectionCardList() {
     if (collections.length === 0) {
         return (
             <div className="w-full max-w-7xl mx-auto">
-                <Label className="mb-4 text-lg font-semibold flex">Collections</Label>
-                <p className="text-sm text-muted-foreground text-center py-12">No collections found.</p>
-            </div>
+            <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
+            <LastEditedEmptyState />
+        </div>
         );
     }
 
     return (
         <div className="w-full max-w-7xl mx-auto">
-            <Label className="mb-4 text-lg font-semibold flex">Collections</Label>
+            <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {collections.map((collection) => (

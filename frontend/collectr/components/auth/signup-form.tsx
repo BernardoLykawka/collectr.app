@@ -33,9 +33,8 @@ export function SignupForm({ onSwitchToLogin, onSuccess, ...props }: SignupFormP
   } = useSignupForm({ onSuccess });
 
   return (
-    <div className="flex w-full justify-end animate-in slide-in-from-right-8 bg-black/30 fade-in duration-500">
-      <div className="w-full max-w-sm">
-        <Card {...props}>
+    <div className="w-full max-w-sm animate-in slide-in-from-right-8 fade-in duration-500">
+      <Card {...props}>
           <CardHeader>
             <CardTitle>Create an account</CardTitle>
           </CardHeader>
@@ -153,7 +152,6 @@ export function SignupForm({ onSwitchToLogin, onSuccess, ...props }: SignupFormP
             </form>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 }
