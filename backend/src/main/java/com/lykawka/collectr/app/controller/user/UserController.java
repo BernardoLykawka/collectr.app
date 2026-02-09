@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +45,7 @@ public class UserController {
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(
-                org.springframework.data.domain.PageRequest.of(page, size)));
+                PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")
@@ -85,7 +87,7 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "Validation error"),
         @ApiResponse(responseCode = "409", description = "Email already registered")
     })
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    @RequestBody(
         description = "User data required to create the account",
         required = true,
         content = @Content(
@@ -112,7 +114,7 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "Validation error"),
         @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    @RequestBody(
         description = "User fields to update",
         required = true,
         content = @Content(
@@ -156,7 +158,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "Login successful"),
         @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    @RequestBody(
         description = "User credentials",
         required = true,
         content = @Content(

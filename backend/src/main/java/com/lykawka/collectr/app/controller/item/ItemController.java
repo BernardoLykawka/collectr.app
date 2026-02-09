@@ -1,6 +1,7 @@
 package com.lykawka.collectr.app.controller.item;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class ItemController {
             @ApiResponse(responseCode = "400", description = "Validation error"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
         })
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    @RequestBody(
             description = "Item data",
             required = true,
             content = @Content(
@@ -87,7 +89,7 @@ public class ItemController {
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size) {
         return ResponseEntity.ok(itemService.getItemsByCollectionId(
-                org.springframework.data.domain.PageRequest.of(page, size), collectionId));
+                PageRequest.of(page, size), collectionId));
     }
 
     @PutMapping("/{id}")
@@ -100,7 +102,7 @@ public class ItemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Item not found")
         })
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        @RequestBody(
             description = "Item fields to update",
             required = true)
     public ResponseEntity<ItemDTO> update(

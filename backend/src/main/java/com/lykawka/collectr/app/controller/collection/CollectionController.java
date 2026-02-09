@@ -1,6 +1,7 @@
 package com.lykawka.collectr.app.controller.collection;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class CollectionController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "409", description = "Conflict: Collection with the same name already exists")
         })
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        @RequestBody(
             description = "Collection data",
             required = true,
             content = @Content(
@@ -88,7 +90,7 @@ public class CollectionController {
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size) {
         return ResponseEntity.ok(collectionService.findAllPublic(
-                org.springframework.data.domain.PageRequest.of(page, size)));
+                PageRequest.of(page, size)));
     }
 
     @GetMapping("/my")
@@ -107,7 +109,7 @@ public class CollectionController {
             HttpServletRequest httpRequest) {
         Long userId = (Long) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findAllByUserId(
-                org.springframework.data.domain.PageRequest.of(page, size), userId));
+                PageRequest.of(page, size), userId));
     }
 
     @GetMapping("/my/last-edited")
@@ -135,7 +137,7 @@ public class CollectionController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        @RequestBody(
             description = "Collection fields to update",
             required = true)
     public ResponseEntity<CollectionDTO> update(
