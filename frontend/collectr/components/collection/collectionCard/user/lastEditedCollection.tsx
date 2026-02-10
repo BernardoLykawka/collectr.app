@@ -64,18 +64,39 @@ export default function LastEditedCollection() {
     };
 
     if (authLoading || loading) {
-        return <><Label className="text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label><CollectionLoadingState title="Last Edited Collection" message="Loading..." /></>;
+        return (
+            <div>
+                <Label className="mb-4 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
+                <CollectionLoadingState title="Last Edited Collection" message="Loading..." />
+            </div>
+        );
     }
 
     if (!isAuthenticated) {
-        return <><Label className="text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label><LoginRequiredState /></>;
+        return (
+            <div>
+                <Label className="mb-4 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
+                <LoginRequiredState />
+            </div>
+        );
     }
 
     if (!collection) {
-        return <><Label className="text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label><LastEditedEmptyState /></>;
+        return (
+            <div>
+                <Label className="mb-4 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
+                <LastEditedEmptyState />
+            </div>
+        );
     }
+
     if (error) {
-        return <CollectionLoadingState title="Last Edited Collection" message={error} />;
+        return (
+            <div>
+                <Label className="mb-4 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
+                <CollectionLoadingState title="Last Edited Collection" message={error} />
+            </div>
+        );
     }
 
 
@@ -94,7 +115,7 @@ function LastEditedCollectionCard({
 
     return (
     <div>
-        <Label className="mb-2 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
+        <Label className="mb-4 text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label>
         <Card 
             className="w-full mx-auto max-w-4xl border-border/80 bg-card/90 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
             onClick={handleCardClick}

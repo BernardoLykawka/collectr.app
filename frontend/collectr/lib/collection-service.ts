@@ -1,7 +1,11 @@
 import { apiFetch } from "./api";
-import type { CollectionProps } from "@/components/collection/collectionCard/collectionInterface";
+import type {
+  CollectionDTO,
+  CreateCollectionRequest,
+  UpdateCollectionRequest,
+} from "@/types/collection";
 
-export type Collection = CollectionProps["collection"];
+export type Collection = CollectionDTO;
 
 export interface PaginatedResponse<T> {
   content: T[];
@@ -24,12 +28,7 @@ export const collectionService = {
     return response;
   },
 
-  async createCollection(data: {
-    name: string;
-    description?: string;
-    collectionType: string;
-    isPublic: boolean;
-  }): Promise<Collection> {
+  async createCollection(data: CreateCollectionRequest): Promise<Collection> {
     const response = await apiFetch<Collection>("/collections", {
       method: "POST",
       body: JSON.stringify(data),
@@ -39,12 +38,7 @@ export const collectionService = {
 
   async updateCollection(
     id: string,
-    data: {
-      name?: string;
-      description?: string;
-      collectionType?: string;
-      isPublic?: boolean;
-    }
+    data: UpdateCollectionRequest
   ): Promise<Collection> {
     const response = await apiFetch<Collection>(`/collections/${id}`, {
       method: "PUT",
