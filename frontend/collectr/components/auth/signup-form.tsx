@@ -14,7 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useSignupForm } from "@/components/auth/hooks";
+import { useSignupForm } from "@/components/auth/hook";
 
 interface SignupFormProps extends React.ComponentProps<typeof Card> {
   onSwitchToLogin?: () => void;

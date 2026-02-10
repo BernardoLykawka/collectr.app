@@ -61,7 +61,8 @@ export default function PublicCollectionCardList() {
     if (error) {
         return (
             <div className="w-full max-w-4xl mx-auto">
-                <p className="text-sm text-destructive text-center">{error}</p>
+                <Label className="mb-4 text-lg font-semibold flex">Explore Collections</Label>
+                <CollectionsEmptyState />
             </div>
         );
     }

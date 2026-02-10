@@ -4,9 +4,10 @@ import com.lykawka.collectr.app.dto.user.AuthResponse;
 import com.lykawka.collectr.app.dto.user.CreateUserRequest;
 import com.lykawka.collectr.app.dto.user.UpdateUserRequest;
 import com.lykawka.collectr.app.dto.user.UserDTO;
+import com.lykawka.collectr.app.exception.AuthenticationException;
 import com.lykawka.collectr.app.exception.ConflictException;
 import com.lykawka.collectr.app.exception.ResourceNotFoundException;
-import com.lykawka.collectr.app.exception.ValidationException;
+
 import com.lykawka.collectr.app.mapper.user.UserMapper;
 import com.lykawka.collectr.app.model.user.User;
 import com.lykawka.collectr.app.repository.user.UserRepository;
@@ -88,14 +89,14 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public AuthResponse login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ValidationException("Invalid email or password"));
+                .orElseThrow(() -> new AuthenticationException("Invalid email or password"));
 
         if (!user.getActive()) {
-            throw new ValidationException("User account is inactive");
+            throw new AuthenticationException("User account is inactive");
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new ValidationException("Invalid email or password");
+            throw new AuthenticationException("Invalid email or password");
         }
 
         String token = jwtProvider.generateToken(user.getEmail(), user.getId());

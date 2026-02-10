@@ -75,21 +75,21 @@ export default function MyCollectionCardList() {
         </div>;
     }
 
+    if (collections.length === 0) {
+        return (
+            <div className="w-full max-w-4xl mx-auto">
+            <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
+            <LastEditedEmptyState />
+        </div>
+        );
+    }
+
     if (error) {
         return (
             <div className="w-full max-w-4xl mx-auto">
                 <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
                 <p className="text-sm text-destructive text-center py-12">{error}</p>
             </div>
-        );
-    }
-
-    if (collections.length === 0) {
-        return (
-            <div className="w-full max-w-7xl mx-auto">
-            <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
-            <LastEditedEmptyState />
-        </div>
         );
     }
 

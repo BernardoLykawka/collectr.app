@@ -71,13 +71,13 @@ export default function LastEditedCollection() {
         return <><Label className="text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label><LoginRequiredState /></>;
     }
 
+    if (!collection) {
+        return <><Label className="text-lg font-semibold flex w-full max-w-4xl mx-auto">Last Edited Collection</Label><LastEditedEmptyState /></>;
+    }
     if (error) {
         return <CollectionLoadingState title="Last Edited Collection" message={error} />;
     }
 
-    if (!collection) {
-        return <LastEditedEmptyState />;
-    }
 
     return <LastEditedCollectionCard collection={collection} handleCardClick={handleCardClick} />;
 }
