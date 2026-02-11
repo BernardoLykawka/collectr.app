@@ -2,8 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Plus, FolderPlus } from "lucide-react";
+import { NewCollectionModal } from "../newCollection/newCollectionModal";
+import { useState } from "react";
 
 export default function LastEditedEmptyState() {
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
     return (
         <div>
             <Card className="w-full mx-auto max-w-4xl border-border/80 bg-card/90 shadow-sm border-dashed">
@@ -31,7 +35,7 @@ export default function LastEditedEmptyState() {
                         <Button 
                             variant="default" 
                             className="gap-2"
-                            onClick={() => window.location.href = "/collection/create"}
+                            onClick={() => setIsCreateModalOpen(true)}
                         >
                             <Plus className="h-4 w-4" />
                             Create New Collection
@@ -39,6 +43,7 @@ export default function LastEditedEmptyState() {
                     </div>
                 </CardContent>
             </Card>
+            <NewCollectionModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
         </div>
     );
 }  

@@ -29,7 +29,8 @@ export function NewCollectionModal({ isOpen, onClose }: NewCollectionModalProps)
 
 	return (
 		<div
-			className="fixed inset-0 z-50 flex items-end justify-end bg-black/60 px-8 py-4 md:px-16"
+			className="fixed inset-0 z-50 flex items-end justify-end bg-black/60 px-8 py-4 md:px-16 
+				animate-in fade-in duration-200"
 			onClick={handleBackdropClick}
 		>
 			<div className="w-full max-w-md">
