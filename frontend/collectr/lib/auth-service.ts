@@ -1,5 +1,5 @@
 import { apiFetch, setToken, removeToken } from "./api";
-import type { AuthResponse, LoginRequest, CreateUserRequest } from "@/types/auth";
+import type { AuthResponse, LoginRequest, CreateUserRequest, UserDTO } from "@/types/auth";
 
 export const authService = {
   async login(email: string, password: string): Promise<AuthResponse> {
@@ -10,8 +10,9 @@ export const authService = {
       body: JSON.stringify(request),
       skipAuth: true,
     });
+    
     setToken(response.token);
-
+    
     return response;
   },
 
@@ -27,15 +28,15 @@ export const authService = {
       role: "USER",
     };
 
-    const response = await apiFetch<AuthResponse>("/users", {
+    await apiFetch<UserDTO>("/users", {
       method: "POST",
       body: JSON.stringify(request),
       skipAuth: true,
     });
-
-    setToken(response.token);
-
-    return response;
+    
+    const loginResponse = await this.login(email, password);
+    
+    return loginResponse;
   },
 
   logout(): void {

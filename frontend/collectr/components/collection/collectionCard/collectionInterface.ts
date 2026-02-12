@@ -1,18 +1,5 @@
-import { CollectionType } from "@/types/CollectionType";
+import { CollectionDTO } from "@/types/collection";
 
 export interface CollectionProps {
-    collection: {
-        id: string;
-        createdAt?: Date;
-        updatedAt?: Date;
-        name: string;
-        description?: string;
-        isPublic: boolean;
-        user: {
-            id: string;
-            nickname: string;
-        };
-        status: number;
-        collectionType: CollectionType;
-    };
+  collection: CollectionDTO;
 }

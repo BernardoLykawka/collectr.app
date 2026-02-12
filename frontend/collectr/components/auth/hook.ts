@@ -32,6 +32,9 @@ export function useLoginForm({ onSuccess }: UseLoginFormOptions = {}) {
     try {
       await login(formData.email, formData.password);
       showToast("Login successful!", "success");
+    
+      await new Promise(resolve => setTimeout(resolve, 150));
+      
       onSuccess?.();
     } catch (err) {
       const errorMessage =
@@ -127,6 +130,9 @@ export function useSignupForm({ onSuccess }: UseSignupFormOptions = {}) {
     try {
       await signup(formData.email, formData.password, formData.nickname);
       showToast("Account created successfully!", "success");
+      
+      await new Promise(resolve => setTimeout(resolve, 150));
+      
       onSuccess?.();
     } catch (err) {
       const errorMessage =

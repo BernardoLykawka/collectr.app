@@ -156,7 +156,7 @@ export function CircularProgress({
         {completed ? (
           <Check className="h-5 w-5 stroke-3 text-green-600 dark:text-green-400" />
         ) : (
-          <span className="text-[10px] font-medium text-muted-foreground">{v}%</span>
+          <span className="text-[10px] font-medium text-muted-foreground">{v}</span>
         )}
       </div>
     </div>

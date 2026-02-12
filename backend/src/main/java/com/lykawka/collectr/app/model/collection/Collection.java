@@ -11,6 +11,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "collections")
+@NamedEntityGraph(name = "Collection.user", attributeNodes = @NamedAttributeNode("user"))
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
