@@ -8,6 +8,7 @@ import { CircularProgress } from "@/components/ui/circular-progress";
 import { collectionService } from "@/lib/collection-service";
 import type { CollectionDTO } from "@/types/collection";
 import { useAuth } from "@/contexts/auth-context";
+import ItemDetails from "@/components/items/ItemsList";
 
 export default function CollectionPage() {
   const params = useParams();
@@ -92,18 +93,9 @@ export default function CollectionPage() {
       {/* Collection Details */}
       <CollectionDetailForm collection={collection} onUpdate={handleUpdate} />
 
-      {/* Collection Items Section - To be implemented */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Collection Items</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12 text-muted-foreground">
-            <p>Items section will be implemented here</p>
-            <p className="text-sm mt-2">You'll be able to add, edit, and view items in your collection</p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Collection Items Section */}
+      <ItemDetails />
+      
     </div>
   );
 }

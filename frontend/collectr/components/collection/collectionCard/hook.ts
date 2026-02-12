@@ -6,26 +6,7 @@ import {
 	Unlock,
 } from "lucide-react";
 import { CollectionProps } from "./collectionInterface";
-
-function formatDate(value?: Date | string | number) {
-	if (!value) return "Recently updated";
-	const date = value instanceof Date ? value : new Date(value);
-	if (Number.isNaN(date.getTime())) return "Recently updated";
-	return date.toLocaleDateString(undefined, {
-		day: "2-digit",
-		month: "short",
-		year: "numeric",
-	});
-}
-
-function toTitle(value?: string) {
-	if (!value) return "Unknown";
-	return value
-		.replace(/[_-]+/g, " ")
-		.toLowerCase()
-		.replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
+import { formatDate, toTitle } from "@/lib/utils";
 
 
 function getTypeIcon(type: CollectionType): LucideIcon {

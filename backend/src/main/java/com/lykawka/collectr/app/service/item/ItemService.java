@@ -55,6 +55,9 @@ public class ItemService implements IItemService {
         item.setCollection(collection);
 
         Item savedItem = itemRepository.save(item);
+        
+        collectionRepository.save(collection);
+        
         return itemMapper.toDTO(savedItem);
     }
 
@@ -74,6 +77,10 @@ public class ItemService implements IItemService {
         item.setSituation(request.getSituation());
         
         Item updatedItem = itemRepository.save(item);
+        
+        Collection collection = item.getCollection();
+        collectionRepository.save(collection);
+        
         return itemMapper.toDTO(updatedItem);
     }
 
@@ -81,7 +88,12 @@ public class ItemService implements IItemService {
     public void deleteItem(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+        
+        Collection collection = item.getCollection();
+        
         itemRepository.delete(item);
+        
+        collectionRepository.save(collection);
     }
     
 }

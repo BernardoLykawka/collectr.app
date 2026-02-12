@@ -32,11 +32,10 @@ export function CollectionDetailForm({ collection, onUpdate }: CollectionDetailF
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-3">
-          {TypeIcon && <TypeIcon className="h-6 w-6" style={{ color: typeColor }} />}
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-medium" style={{ backgroundColor: `${typeColor}20`, color: typeColor }}>
+            {TypeIcon && <TypeIcon className="h-6 w-6" />}
+          </span>
           <CardTitle className="text-xl">{collection.name}</CardTitle>
-          <div className="flex items-center">
-              <CircularProgress value={collection.status ?? 0} />
-            </div>
         </div>
         {!isEditing && (
           <Button variant="outline" onClick={handleEdit}>

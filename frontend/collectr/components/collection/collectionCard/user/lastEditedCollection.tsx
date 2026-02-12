@@ -123,7 +123,12 @@ function LastEditedCollectionCard({
             <CardHeader className="grid-cols-[1fr_auto] items-start">
                 <div className="flex items-center">
                     <div className="flex flex-col gap-1">
-                        <p className="text-lg font-semibold leading-tight">{collection.name}</p>
+                        <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-medium" style={{ backgroundColor: `${typeColor}20`, color: typeColor }}>
+                                {TypeIcon && <TypeIcon className="h-4 w-4" />}
+                            </span>
+                            <p className="text-lg font-semibold leading-tight">{collection.name}</p>
+                        </div>
                         <p className="text-sm text-muted-foreground">by {collection.userNickname}</p>
                     </div>
                 </div>
@@ -140,10 +145,6 @@ function LastEditedCollectionCard({
                 <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
 
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${typeColor}20`, color: typeColor }}>
-                        {TypeIcon && <TypeIcon className="h-4 w-4" />}
-                    </span>
-                    <CircularProgress value={collection.status ?? 0}/>
                 </div>
             </CardContent>
         </Card>
