@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -47,6 +48,7 @@ class UserServiceTest {
     private UserDTO userDTO;
     private CreateUserRequest createUserRequest;
     private UpdateUserRequest updateUserRequest;
+    private static final UUID TEST_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @BeforeEach
     void setUp() {
@@ -56,10 +58,10 @@ class UserServiceTest {
                 .nickname("Test User")
                 .role(UserRole.USER)
                 .build();
-        user.setId(1L);
+        user.setId(TEST_USER_ID);
 
         userDTO = UserDTO.builder()
-                .id(1L)
+                .id(TEST_USER_ID)
                 .email("test@example.com")
                 .nickname("Test User")
                 .role(UserRole.USER)
@@ -99,26 +101,26 @@ class UserServiceTest {
     @Test
     void findById_WhenUserExists_ShouldReturnUserDTO() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.of(user));
         when(userMapper.toDTO(user)).thenReturn(userDTO);
 
         // Act
-        UserDTO result = userService.findById(1L);
+        UserDTO result = userService.findById(TEST_USER_ID);
 
         // Assert
         assertNotNull(result);
         assertEquals(userDTO, result);
-        verify(userRepository).findById(1L);
+        verify(userRepository).findById(TEST_USER_ID);
     }
 
     @Test
     void findById_WhenUserNotExists_ShouldThrowResourceNotFoundException() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> userService.findById(1L));
-        verify(userRepository).findById(1L);
+        assertThrows(ResourceNotFoundException.class, () -> userService.findById(TEST_USER_ID));
+        verify(userRepository).findById(TEST_USER_ID);
     }
 
     @Test
@@ -181,53 +183,55 @@ class UserServiceTest {
     @Test
     void update_WhenUserExists_ShouldUpdateUser() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toDTO(user)).thenReturn(userDTO);
 
         // Act
-        UserDTO result = userService.update(1L, updateUserRequest);
+        UserDTO result = userService.update(TEST_USER_ID, updateUserRequest);
 
         // Assert
         assertNotNull(result);
         assertEquals("Updated Name", user.getNickname());
-        verify(userRepository).findById(1L);
+        verify(userRepository).findById(TEST_USER_ID);
         verify(userRepository).save(user);
     }
 
     @Test
     void update_WhenUserNotExists_ShouldThrowResourceNotFoundException() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, 
-            () -> userService.update(1L, updateUserRequest));
-        verify(userRepository).findById(1L);
+            () -> userService.update(TEST_USER_ID, updateUserRequest));
+        verify(userRepository).findById(TEST_USER_ID);
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void delete_WhenUserExists_ShouldDeleteUser() {
         // Arrange
-        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
 
         // Act
-        userService.delete(1L);
+        userService.delete(TEST_USER_ID);
 
         // Assert
-        verify(userRepository).existsById(1L);
-        verify(userRepository).deleteById(1L);
+        verify(userRepository).findById(TEST_USER_ID);
+        verify(userRepository).save(user);
+        assertFalse(user.getActive());
     }
 
     @Test
     void delete_WhenUserNotExists_ShouldThrowResourceNotFoundException() {
         // Arrange
-        when(userRepository.existsById(1L)).thenReturn(false);
+        when(userRepository.findById(TEST_USER_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> userService.delete(1L));
-        verify(userRepository).existsById(1L);
-        verify(userRepository, never()).deleteById(anyLong());
+        assertThrows(ResourceNotFoundException.class, () -> userService.delete(TEST_USER_ID));
+        verify(userRepository).findById(TEST_USER_ID);
+        verify(userRepository, never()).save(any(User.class));
     }
 }

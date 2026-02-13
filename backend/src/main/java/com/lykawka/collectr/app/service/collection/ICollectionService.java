@@ -7,19 +7,21 @@ import com.lykawka.collectr.app.dto.collection.UpdateCollectionRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 public interface ICollectionService {
     Page<CollectionDTO> findAll(Pageable pageable);
 
-    Page<CollectionDTO> findAllByUserId(Pageable pageable, Long userId);
+    Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId);
 
     Page<CollectionDTO> findAllPublic(Pageable pageable);
 
-    CollectionDTO findById(Long id, Long userId);
+    CollectionDTO findById(UUID id, UUID userId);
 
-    CollectionDTO create(CreateCollectionRequest request, Long userId);
+    CollectionDTO create(CreateCollectionRequest request, UUID userId);
 
-    CollectionDTO update(Long id, UpdateCollectionRequest request, Long userId);
+    CollectionDTO update(UUID id, UpdateCollectionRequest request, UUID userId);
 
-    void delete(Long id, Long userId);
+    void delete(UUID id, UUID userId);
 
 }

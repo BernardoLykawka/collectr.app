@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -36,7 +38,7 @@ public class UserService implements IUserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO findById(Long id) {
+    public UserDTO findById(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toDTO(user);
@@ -65,7 +67,7 @@ public class UserService implements IUserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UpdateUserRequest request) {
+    public UserDTO update(UUID id, UpdateUserRequest request) {
         if (userRepository.existsByNickname(request.getNickname())) {
             throw new ConflictException("Nickname already registered");
         }
@@ -79,7 +81,7 @@ public class UserService implements IUserService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setActive(false);
@@ -103,5 +105,12 @@ public class UserService implements IUserService {
         UserDTO userDTO = userMapper.toDTO(user);
 
         return new AuthResponse(token, "Bearer", jwtProvider.getExpirationTime(), userDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public UserDTO getCurrentUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return userMapper.toDTO(user);
     }
 }

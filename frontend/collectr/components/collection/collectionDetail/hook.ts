@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { showToast } from "@/components/ui/toast";
 import { collectionService } from "@/lib/collection-service";
 import type { CollectionDTO, UpdateCollectionRequest } from "@/types/collection";
@@ -6,11 +7,15 @@ import type { CollectionDTO, UpdateCollectionRequest } from "@/types/collection"
 interface UseCollectionDetailFormProps {
   collection: CollectionDTO;
   onUpdate?: (collection: CollectionDTO) => void;
+  onDelete?: () => void;
 }
 
-export function useCollectionDetailForm({ collection, onUpdate }: UseCollectionDetailFormProps) {
+export function useCollectionDetailForm({ collection, onUpdate, onDelete }: UseCollectionDetailFormProps) {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [formData, setFormData] = useState({
     name: collection.name,
     description: collection.description || "",
@@ -75,13 +80,46 @@ export function useCollectionDetailForm({ collection, onUpdate }: UseCollectionD
     setIsEditing(true);
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await collectionService.deleteCollection(collection.id.toString());
+      showToast("Collection deleted successfully!", "success");
+      setShowDeleteModal(false);
+      
+      if (onDelete) {
+        onDelete();
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete collection";
+      showToast(errorMessage, "error");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return {
     isEditing,
     isSaving,
+    isDeleting,
+    showDeleteModal,
     formData,
     handleChange,
     handleSubmit,
     handleCancel,
     handleEdit,
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm,
   };
 }

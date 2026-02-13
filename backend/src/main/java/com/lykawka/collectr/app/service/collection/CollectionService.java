@@ -18,6 +18,8 @@ import com.lykawka.collectr.app.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CollectionService implements ICollectionService {
@@ -32,13 +34,13 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public Page<CollectionDTO> findAllByUserId(Pageable pageable, Long userId) {
+    public Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId) {
         return collectionRepository.findAllByUserId(pageable, userId)
                 .map(collectionMapper::toDTO);
     }
 
     @Transactional
-    public CollectionDTO findById(Long id, Long userId) {
+    public CollectionDTO findById(UUID id, UUID userId) {
         Collection collection = collectionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Collection not found"));
         
@@ -59,7 +61,7 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public CollectionDTO create(CreateCollectionRequest request, Long userId) {
+    public CollectionDTO create(CreateCollectionRequest request, UUID userId) {
         if (userId == null) {
             throw new ValidationException("You must be logged in to create a collection");
         }
@@ -79,7 +81,7 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public CollectionDTO update(Long id, UpdateCollectionRequest request, Long userId) {
+    public CollectionDTO update(UUID id, UpdateCollectionRequest request, UUID userId) {
         Collection collection = collectionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Collection not found"));
         
@@ -103,7 +105,7 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public void delete(Long id, Long userId) {
+    public void delete(UUID id, UUID userId) {
         Collection collection = collectionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Collection not found"));
         
@@ -111,12 +113,11 @@ public class CollectionService implements ICollectionService {
             throw new ValidationException("You don't have permission to delete this collection");
         }
         
-        collection.setActive(false);
-        collectionRepository.save(collection);
+        collectionRepository.delete(collection);
     }
 
     @Transactional
-    public CollectionDTO getLastEditedCollection(Long userId) {
+    public CollectionDTO getLastEditedCollection(UUID userId) {
         Collection collection = collectionRepository.findFirstByUserIdAndActiveTrueOrderByUpdatedAtDesc(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No active collections found for this user"));
         return collectionMapper.toDTO(collection);

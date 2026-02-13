@@ -20,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @RestController
 @Tag(name = "Collections")
 @RequestMapping("/api/collections")
@@ -53,7 +55,7 @@ public class CollectionController {
     public ResponseEntity<CollectionDTO> create(
             @Valid @RequestBody CreateCollectionRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.create(request, userId));
     }
 
@@ -67,10 +69,10 @@ public class CollectionController {
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
     public ResponseEntity<CollectionDTO> findById(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findById(id, userId));
     }
 
@@ -105,7 +107,7 @@ public class CollectionController {
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findAllByUserId(
                 org.springframework.data.domain.PageRequest.of(page, size), userId));
     }
@@ -121,7 +123,7 @@ public class CollectionController {
         })
     public ResponseEntity<CollectionDTO> getLastEditedCollection(
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.getLastEditedCollection(userId));
     }
 
@@ -139,11 +141,11 @@ public class CollectionController {
             description = "Collection fields to update",
             required = true)
     public ResponseEntity<CollectionDTO> update(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             @Valid @RequestBody UpdateCollectionRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.update(id, request, userId));
     }
 
@@ -157,10 +159,10 @@ public class CollectionController {
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         collectionService.delete(id, userId);
         return ResponseEntity.noContent().build();
     }

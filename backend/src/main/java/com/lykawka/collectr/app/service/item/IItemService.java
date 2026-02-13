@@ -7,14 +7,16 @@ import com.lykawka.collectr.app.dto.item.CreateItemRequest;
 import com.lykawka.collectr.app.dto.item.ItemDTO;
 import com.lykawka.collectr.app.dto.item.UpdateItemRequest;
 
+import java.util.UUID;
+
 public interface IItemService {
-    Page<ItemDTO> getItemsByCollectionId(Pageable pageable, Long collectionId);
+    Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId);
     
-    ItemDTO getItemById(Long id);
+    ItemDTO getItemById(UUID id);
 
-    ItemDTO createItem(CreateItemRequest request, Long userId);
+    ItemDTO createItem(CreateItemRequest request, UUID userId);
 
-    ItemDTO updateItem(Long id, UpdateItemRequest item);
+    ItemDTO updateItem(UUID id, UpdateItemRequest item);
 
-    void deleteItem(Long id);
+    void deleteItem(UUID id);
 }

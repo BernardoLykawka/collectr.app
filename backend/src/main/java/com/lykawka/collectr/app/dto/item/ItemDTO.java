@@ -8,14 +8,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDTO {
     
-    private Long id;
-    private Long collectionId;
+    private UUID id;
+    private UUID collectionId;
     private String name;
     private String description;
     private String imageUrl;

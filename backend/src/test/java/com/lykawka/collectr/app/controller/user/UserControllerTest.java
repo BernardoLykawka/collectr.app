@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -38,6 +40,7 @@ class UserControllerTest {
     private UserDTO userDTO;
     private CreateUserRequest createUserRequest;
     private UpdateUserRequest updateUserRequest;
+    private static final UUID TEST_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @BeforeEach
     void setUp() {
@@ -47,7 +50,7 @@ class UserControllerTest {
                 .build();
         
         userDTO = UserDTO.builder()
-                .id(1L)
+                .id(TEST_USER_ID)
                 .email("test@example.com")
                 .nickname("Test User")
                 .role(UserRole.USER)
@@ -69,25 +72,25 @@ class UserControllerTest {
 
     @Test
     void findById_WhenUserExists_ShouldReturnUser() throws Exception {
-        when(userService.findById(1L)).thenReturn(userDTO);
+        when(userService.findById(TEST_USER_ID)).thenReturn(userDTO);
 
-        mockMvc.perform(get("/api/users/1")
+        mockMvc.perform(get("/api/users/" + TEST_USER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(TEST_USER_ID.toString()));
 
-        verify(userService).findById(1L);
+        verify(userService).findById(TEST_USER_ID);
     }
 
     @Test
     void findById_WhenUserNotExists_ShouldReturn404() throws Exception {
-        when(userService.findById(1L)).thenThrow(new ResourceNotFoundException("User not found"));
+        when(userService.findById(TEST_USER_ID)).thenThrow(new ResourceNotFoundException("User not found"));
 
-        mockMvc.perform(get("/api/users/1")
+        mockMvc.perform(get("/api/users/" + TEST_USER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        verify(userService).findById(1L);
+        verify(userService).findById(TEST_USER_ID);
     }
 
     @Test
@@ -105,13 +108,13 @@ class UserControllerTest {
 
     @Test
     void delete_WhenUserExists_ShouldDeleteUser() throws Exception {
-        doNothing().when(userService).delete(1L);
+        doNothing().when(userService).delete(TEST_USER_ID);
 
-        mockMvc.perform(delete("/api/users/1")
+        mockMvc.perform(delete("/api/users/" + TEST_USER_ID)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(userService).delete(1L);
+        verify(userService).delete(TEST_USER_ID);
     }
 }

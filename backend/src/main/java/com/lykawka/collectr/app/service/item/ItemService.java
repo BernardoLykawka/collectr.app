@@ -18,6 +18,8 @@ import com.lykawka.collectr.app.repository.item.ItemRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ItemService implements IItemService {
@@ -26,20 +28,20 @@ public class ItemService implements IItemService {
     private final CollectionRepository collectionRepository;
 
     @Transactional
-    public Page<ItemDTO> getItemsByCollectionId(Pageable pageable, Long collectionId) {
+    public Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId) {
         return itemRepository.findAllByCollectionId(pageable, collectionId)
                 .map(itemMapper::toDTO);
     }
 
     @Transactional
-    public ItemDTO getItemById(Long id) {
+    public ItemDTO getItemById(UUID id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
         return itemMapper.toDTO(item);
     }
 
     @Transactional
-    public ItemDTO createItem(CreateItemRequest request, Long userId) {
+    public ItemDTO createItem(CreateItemRequest request, UUID userId) {
         if (request.getCollectionId() == null) {
             throw new ValidationException("Collection ID is required");
         }
@@ -62,7 +64,7 @@ public class ItemService implements IItemService {
     }
 
     @Transactional
-    public ItemDTO updateItem(Long id, UpdateItemRequest request) {
+    public ItemDTO updateItem(UUID id, UpdateItemRequest request) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
 
@@ -85,7 +87,7 @@ public class ItemService implements IItemService {
     }
 
     @Transactional
-    public void deleteItem(Long id) {
+    public void deleteItem(UUID id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
         
