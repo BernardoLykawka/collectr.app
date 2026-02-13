@@ -10,7 +10,7 @@ import com.lykawka.collectr.app.dto.item.UpdateItemRequest;
 import java.util.UUID;
 
 public interface IItemService {
-    Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId);
+    Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId, String name);
     
     ItemDTO getItemById(UUID id);
 

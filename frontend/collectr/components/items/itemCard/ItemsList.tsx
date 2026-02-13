@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Package } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, Package, Search } from "lucide-react";
 import { itemService, type Item } from "@/lib/item-service";
 import { NewItemModal } from "../newItem/newItemModal";
 import { ItemCard } from "./ItemCard";
+import SearchItemsEmptyState from "../emptyState/searchItemsEmpty";
 
 interface ItemsListProps {
   collectionId: string;
@@ -19,12 +21,14 @@ export default function ItemsList({ collectionId }: ItemsListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const loadItems = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await itemService.getItemsByCollectionId(collectionId, page, 6);
+      const response = await itemService.getItemsByCollectionId(collectionId, page, 6, searchTerm || undefined);
       setItems(response.content);
       setTotalPages(response.totalPages);
     } catch (err) {
@@ -37,7 +41,17 @@ export default function ItemsList({ collectionId }: ItemsListProps) {
 
   useEffect(() => {
     loadItems();
-  }, [collectionId, page]);
+  }, [collectionId, page, searchTerm]);
+
+  // Reset to page 0 when search term changes
+  useEffect(() => {
+    setPage(0);
+  }, [searchTerm]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchTerm(searchInput);
+  };
 
   const handleItemAdded = () => {
     if (page === 0) {
@@ -78,12 +92,34 @@ export default function ItemsList({ collectionId }: ItemsListProps) {
           </Button>
         </CardHeader>
         <CardContent>
-          {items.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p className="font-medium">No items yet</p>
-              <p className="text-sm mt-2">Add your first item to this collection</p>
+          <form onSubmit={handleSearch} className="flex gap-2 mb-6">
+            <div className="relative flex-1">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <Search className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <Input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search items..."
+                className="pl-9"
+              />
             </div>
+            <Button type="submit">
+              Search
+            </Button>
+          </form>
+          
+          {items.length === 0 ? (
+            searchTerm ? (
+              <SearchItemsEmptyState searchTerm={searchTerm} />
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p className="font-medium">No items yet</p>
+                <p className="text-sm mt-2">Add your first item to this collection</p>
+              </div>
+            )
           ) : (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">

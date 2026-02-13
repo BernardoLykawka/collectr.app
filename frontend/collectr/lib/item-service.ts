@@ -12,10 +12,15 @@ export const itemService = {
   async getItemsByCollectionId(
     collectionId: string,
     page: number = 0,
-    size: number = 6
+    size: number = 6,
+    name?: string
   ): Promise<PaginatedResponse<Item>> {
+    const params = new URLSearchParams({ page: page.toString(), size: size.toString() });
+    if (name) {
+      params.append('name', name);
+    }
     const response = await apiFetch<PaginatedResponse<Item>>(
-      `/items/collection/${collectionId}?page=${page}&size=${size}`
+      `/items/collection/${collectionId}?${params.toString()}`
     );
     return response;
   },

@@ -34,7 +34,11 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId) {
+    public Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId, String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            return collectionRepository.findAllByUserIdAndNameContainingIgnoreCase(pageable, userId, name)
+                    .map(collectionMapper::toDTO);
+        }
         return collectionRepository.findAllByUserId(pageable, userId)
                 .map(collectionMapper::toDTO);
     }
@@ -52,9 +56,13 @@ public class CollectionService implements ICollectionService {
     }
 
     @Transactional
-    public Page<CollectionDTO> findAllPublic(Pageable pageable) {
+    public Page<CollectionDTO> findAllPublic(Pageable pageable, String name) {
         if(pageable == null) {
             pageable = Pageable.unpaged();
+        }
+        if (name != null && !name.trim().isEmpty()) {
+            return collectionRepository.findAllByIsPublicTrueAndNameContainingIgnoreCase(pageable, name)
+                    .map(collectionMapper::toDTO);
         }
         return collectionRepository.findAllByIsPublicTrue(pageable)
                 .map(collectionMapper::toDTO);

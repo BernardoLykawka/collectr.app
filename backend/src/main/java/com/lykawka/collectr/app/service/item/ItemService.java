@@ -28,7 +28,11 @@ public class ItemService implements IItemService {
     private final CollectionRepository collectionRepository;
 
     @Transactional
-    public Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId) {
+    public Page<ItemDTO> getItemsByCollectionId(Pageable pageable, UUID collectionId, String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            return itemRepository.findAllByCollectionIdAndNameContainingIgnoreCase(pageable, collectionId, name)
+                    .map(itemMapper::toDTO);
+        }
         return itemRepository.findAllByCollectionId(pageable, collectionId)
                 .map(itemMapper::toDTO);
     }

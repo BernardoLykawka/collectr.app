@@ -18,7 +18,13 @@ public interface CollectionRepository extends JpaRepository<Collection, UUID> {
     Page<Collection> findAllByUserId(Pageable pageable, UUID userId);
 
     @EntityGraph(value = "Collection.user", type = EntityGraph.EntityGraphType.FETCH)
+    Page<Collection> findAllByUserIdAndNameContainingIgnoreCase(Pageable pageable, UUID userId, String name);
+
+    @EntityGraph(value = "Collection.user", type = EntityGraph.EntityGraphType.FETCH)
     Page<Collection> findAllByIsPublicTrue(Pageable pageable);
+
+    @EntityGraph(value = "Collection.user", type = EntityGraph.EntityGraphType.FETCH)
+    Page<Collection> findAllByIsPublicTrueAndNameContainingIgnoreCase(Pageable pageable, String name);
 
     boolean existsByNameAndUserId(String name, UUID userId);
 

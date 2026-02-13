@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface ItemRepository extends JpaRepository<Item, UUID>{
     Page<Item> findAllByCollectionId(Pageable pageable, UUID collectionId);
 
+    Page<Item> findAllByCollectionIdAndNameContainingIgnoreCase(Pageable pageable, UUID collectionId, String name);
+
 }

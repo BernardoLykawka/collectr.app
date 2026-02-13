@@ -12,9 +12,9 @@ import java.util.UUID;
 public interface ICollectionService {
     Page<CollectionDTO> findAll(Pageable pageable);
 
-    Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId);
+    Page<CollectionDTO> findAllByUserId(Pageable pageable, UUID userId, String name);
 
-    Page<CollectionDTO> findAllPublic(Pageable pageable);
+    Page<CollectionDTO> findAllPublic(Pageable pageable, String name);
 
     CollectionDTO findById(UUID id, UUID userId);
 

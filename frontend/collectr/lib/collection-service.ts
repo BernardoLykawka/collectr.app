@@ -18,8 +18,12 @@ export interface PaginatedResponse<T> {
 }
 
 export const collectionService = {
-  async getCollections(page: number = 0, size: number = 6): Promise<PaginatedResponse<Collection>> {
-    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections?page=${page}&size=${size}`);
+  async getCollections(page: number = 0, size: number = 6, name?: string): Promise<PaginatedResponse<Collection>> {
+    const params = new URLSearchParams({ page: page.toString(), size: size.toString() });
+    if (name) {
+      params.append('name', name);
+    }
+    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections?${params.toString()}`);
     return response;
   },
 
@@ -53,8 +57,12 @@ export const collectionService = {
     });
   },
 
-  async getUserCollections(page: number = 0, size: number = 6): Promise<PaginatedResponse<Collection>> {
-    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections/my?page=${page}&size=${size}`);
+  async getUserCollections(page: number = 0, size: number = 6, name?: string): Promise<PaginatedResponse<Collection>> {
+    const params = new URLSearchParams({ page: page.toString(), size: size.toString() });
+    if (name) {
+      params.append('name', name);
+    }
+    const response = await apiFetch<PaginatedResponse<Collection>>(`/collections/my?${params.toString()}`);
     return response;
   },
 

@@ -75,7 +75,7 @@ public class ItemController {
     @GetMapping("/collection/{collectionId}")
         @Operation(
             summary = "List items by collection",
-            description = "Returns a paginated list of items for a collection.")
+            description = "Returns a paginated list of items for a collection. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Items retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"),
@@ -87,9 +87,11 @@ public class ItemController {
             @Parameter(description = "Page number (0-based)", example = "0")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by item name (case-insensitive, partial match)", example = "rare")
+            @RequestParam(required = false) String name) {
         return ResponseEntity.ok(itemService.getItemsByCollectionId(
-                org.springframework.data.domain.PageRequest.of(page, size), collectionId));
+                org.springframework.data.domain.PageRequest.of(page, size), collectionId, name));
     }
 
     @PutMapping("/{id}")

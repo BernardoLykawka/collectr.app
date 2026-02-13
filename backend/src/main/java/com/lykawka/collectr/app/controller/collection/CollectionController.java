@@ -79,7 +79,7 @@ public class CollectionController {
     @GetMapping()
         @Operation(
             summary = "List public collections",
-            description = "Returns a paginated list of public collections.")
+            description = "Returns a paginated list of public collections. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Collections retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
@@ -88,15 +88,17 @@ public class CollectionController {
             @Parameter(description = "Page number (0-based)", example = "0")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by collection name (case-insensitive, partial match)", example = "coins")
+            @RequestParam(required = false) String name) {
         return ResponseEntity.ok(collectionService.findAllPublic(
-                org.springframework.data.domain.PageRequest.of(page, size)));
+                org.springframework.data.domain.PageRequest.of(page, size), name));
     }
 
     @GetMapping("/my")
         @Operation(
             summary = "List my collections",
-            description = "Returns a paginated list of collections owned by the authenticated user.")
+            description = "Returns a paginated list of collections owned by the authenticated user. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Collections retrieved successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
@@ -106,10 +108,12 @@ public class CollectionController {
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by collection name (case-insensitive, partial match)", example = "stamps")
+            @RequestParam(required = false) String name,
             HttpServletRequest httpRequest) {
         UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findAllByUserId(
-                org.springframework.data.domain.PageRequest.of(page, size), userId));
+                org.springframework.data.domain.PageRequest.of(page, size), userId, name));
     }
 
     @GetMapping("/my/last-edited")
