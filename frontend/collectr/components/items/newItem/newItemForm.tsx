@@ -122,7 +122,6 @@ export function NewItemForm({ collectionId, onSuccess }: NewItemFormProps) {
                 value={formData.releaseYear}
                 onChange={handleChange}
                 placeholder="2024"
-                min="1800"
                 max="2100"
               />
               {fieldErrors.releaseYear && (

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CollectionProps } from "../collectionInterface";
 import { useCollectionCard } from "../hook";
-import CircularProgress from "@/components/ui/circular-progress";
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";

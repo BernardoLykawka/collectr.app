@@ -78,8 +78,8 @@ export function useNewItemForm(
 
     if (formData.releaseYear) {
       const year = parseInt(formData.releaseYear);
-      if (isNaN(year) || year < 1800 || year > 2100) {
-        errors.releaseYear = "Please enter a valid year (1800-2100)";
+      if (isNaN(year) || year > 2100) {
+        errors.releaseYear = "Please enter a valid year (< 2100)";
       }
     }
 
