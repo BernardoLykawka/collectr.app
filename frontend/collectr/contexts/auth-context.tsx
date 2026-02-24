@@ -16,20 +16,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    const storedToken = authService.getStoredToken();
-    if (storedToken) {
-      setState((prev) => ({
-        ...prev,
-        token: storedToken,
-        isAuthenticated: true,
-        isLoading: false,
-      }));
-    } else {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-      }));
-    }
+    const initializeAuth = async () => {
+      const storedToken = authService.getStoredToken();
+      if (storedToken) {
+        try {
+          const user = await authService.getCurrentUser();
+          setState((prev) => ({
+            ...prev,
+            user,
+            token: storedToken,
+            isAuthenticated: true,
+            isLoading: false,
+          }));
+        } catch (error) {
+          authService.logout();
+          setState((prev) => ({
+            ...prev,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+          }));
+        }
+      } else {
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+        }));
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {

@@ -1,8 +1,8 @@
 import { CollectionType } from "./CollectionType";
 
 export interface CollectionDTO {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   userNickname: string;
   name: string;
   description: string | null;

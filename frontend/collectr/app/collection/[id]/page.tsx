@@ -8,7 +8,7 @@ import { CircularProgress } from "@/components/ui/circular-progress";
 import { collectionService } from "@/lib/collection-service";
 import type { CollectionDTO } from "@/types/collection";
 import { useAuth } from "@/contexts/auth-context";
-import ItemDetails from "@/components/items/ItemsList";
+import ItemDetails from "@/components/items/itemCard/ItemsList";
 
 export default function CollectionPage() {
   const params = useParams();
@@ -90,11 +90,9 @@ export default function CollectionPage() {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      {/* Collection Details */}
       <CollectionDetailForm collection={collection} onUpdate={handleUpdate} />
 
-      {/* Collection Items Section */}
-      <ItemDetails />
+      <ItemDetails collectionId={id} />
       
     </div>
   );

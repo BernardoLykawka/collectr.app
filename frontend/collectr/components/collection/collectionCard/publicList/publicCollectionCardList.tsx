@@ -8,10 +8,15 @@ import { CollectionProps } from "../collectionInterface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { collectionService } from "@/lib/collection-service";
 import CollectionsEmptyState from "@/components/collection/emptyState/collectionsEmpty";
+import SearchEmptyState from "@/components/collection/emptyState/searchEmpty";
 
 const itemsPerPage = 6;
 
-export default function PublicCollectionCardList() {
+interface PublicCollectionCardListProps {
+    searchTerm?: string;
+}
+
+export default function PublicCollectionCardList({ searchTerm = "" }: PublicCollectionCardListProps) {
     const [collections, setCollections] = useState<CollectionProps["collection"][]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -22,7 +27,7 @@ export default function PublicCollectionCardList() {
         const fetchCollections = async () => {
             try {
                 setLoading(true);
-                const data = await collectionService.getCollections(currentPage, itemsPerPage);
+                const data = await collectionService.getCollections(currentPage, itemsPerPage, searchTerm || undefined);
                 setCollections(data.content);
                 setTotalPages(data.totalPages);
                 setError(null);
@@ -35,7 +40,12 @@ export default function PublicCollectionCardList() {
         };
 
         fetchCollections();
-    }, [currentPage]);
+    }, [currentPage, searchTerm]);
+
+    // Reset to page 0 when search term changes
+    useEffect(() => {
+        setCurrentPage(0);
+    }, [searchTerm]);
 
     const goToNextPage = () => {
         setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
@@ -70,7 +80,7 @@ export default function PublicCollectionCardList() {
     if (collections.length === 0) {
         return <div className="w-full max-w-4xl mx-auto">
             <Label className="mb-4 text-lg font-semibold flex">Explore Collections</Label>
-            <CollectionsEmptyState />
+            {searchTerm ? <SearchEmptyState searchTerm={searchTerm} /> : <CollectionsEmptyState />}
         </div>;
     }
 

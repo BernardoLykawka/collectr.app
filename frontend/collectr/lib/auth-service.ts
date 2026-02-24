@@ -43,6 +43,13 @@ export const authService = {
     removeToken();
   },
 
+  async getCurrentUser(): Promise<UserDTO> {
+    const response = await apiFetch<UserDTO>("/users/me", {
+      method: "GET",
+    });
+    return response;
+  },
+
   getStoredToken(): string | null {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("authToken");

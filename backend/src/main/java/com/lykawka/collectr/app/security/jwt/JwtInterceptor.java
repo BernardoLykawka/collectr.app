@@ -7,6 +7,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
@@ -35,7 +37,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
         
-        Long userId = jwtProvider.getUserIdFromToken(token);
+        UUID userId = jwtProvider.getUserIdFromToken(token);
         String email = jwtProvider.getEmailFromToken(token);
         
         request.setAttribute("userId", userId);

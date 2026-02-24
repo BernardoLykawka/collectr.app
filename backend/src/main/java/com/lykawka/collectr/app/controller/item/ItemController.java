@@ -21,6 +21,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @RestController
 @Tag(name = "Items")
 @RequestMapping("/api/items")
@@ -53,7 +55,7 @@ public class ItemController {
     public ResponseEntity<ItemDTO> create(
             @Valid @RequestBody CreateItemRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         ItemDTO created = itemService.createItem(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -66,28 +68,30 @@ public class ItemController {
             @ApiResponse(responseCode = "200", description = "Item found"),
             @ApiResponse(responseCode = "404", description = "Item not found")
         })
-    public ResponseEntity<ItemDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ItemDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(itemService.getItemById(id));
     }
 
     @GetMapping("/collection/{collectionId}")
         @Operation(
             summary = "List items by collection",
-            description = "Returns a paginated list of items for a collection.")
+            description = "Returns a paginated list of items for a collection. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Items retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"),
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
     public ResponseEntity<Page<ItemDTO>> findByCollectionId(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long collectionId,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID collectionId,
             @Parameter(description = "Page number (0-based)", example = "0")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by item name (case-insensitive, partial match)", example = "rare")
+            @RequestParam(required = false) String name) {
         return ResponseEntity.ok(itemService.getItemsByCollectionId(
-                org.springframework.data.domain.PageRequest.of(page, size), collectionId));
+                org.springframework.data.domain.PageRequest.of(page, size), collectionId, name));
     }
 
     @PutMapping("/{id}")
@@ -104,8 +108,8 @@ public class ItemController {
             description = "Item fields to update",
             required = true)
     public ResponseEntity<ItemDTO> update(
-            @Parameter(description = "Item id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Item id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             @Valid @RequestBody UpdateItemRequest request,
             HttpServletRequest httpRequest) {
         return ResponseEntity.ok(itemService.updateItem(id, request));
@@ -119,7 +123,7 @@ public class ItemController {
             @ApiResponse(responseCode = "204", description = "Item deleted"),
             @ApiResponse(responseCode = "404", description = "Item not found")
         })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }

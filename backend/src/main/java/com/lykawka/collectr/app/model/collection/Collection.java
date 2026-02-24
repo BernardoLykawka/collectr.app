@@ -1,11 +1,12 @@
 package com.lykawka.collectr.app.model.collection;
 
-
 import com.lykawka.collectr.app.model.BaseEntity;
 import com.lykawka.collectr.app.model.user.User;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -32,7 +33,7 @@ public class Collection extends BaseEntity {
     private CollectionType collectionType;
 
     @Column(nullable = false)
-    private Long userId;
+    private UUID userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)

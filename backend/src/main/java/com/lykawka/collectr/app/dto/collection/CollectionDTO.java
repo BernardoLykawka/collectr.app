@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.lykawka.collectr.app.model.collection.CollectionType;
 
@@ -14,8 +15,8 @@ import com.lykawka.collectr.app.model.collection.CollectionType;
 @AllArgsConstructor
 public class CollectionDTO {
     
-    private Long id;
-    private Long userId;
+    private UUID id;
+    private UUID userId;
     private String userNickname;
     private String name;
     private String description;

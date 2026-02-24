@@ -4,29 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { CircularProgress } from "@/components/ui/circular-progress";
+import { useAuth } from "@/contexts/auth-context";
 import { CollectionType, collectionTypeOptions, typeIcons, typeColors } from "@/types/CollectionType";
 import type { CollectionDTO } from "@/types/collection";
 import { useCollectionDetailForm } from "./hook";
+import { DeleteConfirmModal } from "./deleteConfirmModal";
+import { Trash2 } from "lucide-react";
 
 interface CollectionDetailFormProps {
   collection: CollectionDTO;
   onUpdate?: (collection: CollectionDTO) => void;
+  onDelete?: () => void;
 }
 
-export function CollectionDetailForm({ collection, onUpdate }: CollectionDetailFormProps) {
+export function CollectionDetailForm({ collection, onUpdate, onDelete }: CollectionDetailFormProps) {
   const {
     isEditing,
     isSaving,
+    isDeleting,
+    showDeleteModal,
     formData,
     handleChange,
     handleSubmit,
     handleCancel,
     handleEdit,
-  } = useCollectionDetailForm({ collection, onUpdate });
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm,
+  } = useCollectionDetailForm({ collection, onUpdate, onDelete });
 
   const TypeIcon = typeIcons[collection.collectionType];
   const typeColor = typeColors[collection.collectionType] ?? "#6B7280";
+  const { user } = useAuth();
+  const isOwner = user?.id === collection.userId;
 
   return (
     <Card>
@@ -37,10 +47,16 @@ export function CollectionDetailForm({ collection, onUpdate }: CollectionDetailF
           </span>
           <CardTitle className="text-xl">{collection.name}</CardTitle>
         </div>
-        {!isEditing && (
-          <Button variant="outline" onClick={handleEdit}>
-            Edit
-          </Button>
+
+        {!isEditing && isOwner && (
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleEdit}>
+              Edit
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteClick}>
+              <Trash2 className="h-3.5 w-3.5"/>
+            </Button>
+          </div>
         )}
         
       </CardHeader>
@@ -138,6 +154,14 @@ export function CollectionDetailForm({ collection, onUpdate }: CollectionDetailF
           </div>
         )}
       </CardContent>
+
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        collectionName={collection.name}
+        isDeleting={isDeleting}
+      />
     </Card>
   );
 }

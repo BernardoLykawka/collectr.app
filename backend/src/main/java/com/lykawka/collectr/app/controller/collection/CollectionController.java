@@ -20,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @RestController
 @Tag(name = "Collections")
 @RequestMapping("/api/collections")
@@ -53,7 +55,7 @@ public class CollectionController {
     public ResponseEntity<CollectionDTO> create(
             @Valid @RequestBody CreateCollectionRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.create(request, userId));
     }
 
@@ -67,17 +69,17 @@ public class CollectionController {
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
     public ResponseEntity<CollectionDTO> findById(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findById(id, userId));
     }
 
     @GetMapping()
         @Operation(
             summary = "List public collections",
-            description = "Returns a paginated list of public collections.")
+            description = "Returns a paginated list of public collections. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Collections retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
@@ -86,15 +88,17 @@ public class CollectionController {
             @Parameter(description = "Page number (0-based)", example = "0")
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by collection name (case-insensitive, partial match)", example = "coins")
+            @RequestParam(required = false) String name) {
         return ResponseEntity.ok(collectionService.findAllPublic(
-                org.springframework.data.domain.PageRequest.of(page, size)));
+                org.springframework.data.domain.PageRequest.of(page, size), name));
     }
 
     @GetMapping("/my")
         @Operation(
             summary = "List my collections",
-            description = "Returns a paginated list of collections owned by the authenticated user.")
+            description = "Returns a paginated list of collections owned by the authenticated user. Optionally filter by name.")
         @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Collections retrieved successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
@@ -104,10 +108,12 @@ public class CollectionController {
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size", example = "6")
             @RequestParam(defaultValue = "6") int size,
+            @Parameter(description = "Filter by collection name (case-insensitive, partial match)", example = "stamps")
+            @RequestParam(required = false) String name,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.findAllByUserId(
-                org.springframework.data.domain.PageRequest.of(page, size), userId));
+                org.springframework.data.domain.PageRequest.of(page, size), userId, name));
     }
 
     @GetMapping("/my/last-edited")
@@ -121,7 +127,7 @@ public class CollectionController {
         })
     public ResponseEntity<CollectionDTO> getLastEditedCollection(
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.getLastEditedCollection(userId));
     }
 
@@ -139,11 +145,11 @@ public class CollectionController {
             description = "Collection fields to update",
             required = true)
     public ResponseEntity<CollectionDTO> update(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             @Valid @RequestBody UpdateCollectionRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         return ResponseEntity.ok(collectionService.update(id, request, userId));
     }
 
@@ -157,10 +163,10 @@ public class CollectionController {
             @ApiResponse(responseCode = "404", description = "Collection not found")
         })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Collection id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "Collection id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             HttpServletRequest httpRequest) {
-        Long userId = (Long) httpRequest.getAttribute("userId");
+        UUID userId = (UUID) httpRequest.getAttribute("userId");
         collectionService.delete(id, userId);
         return ResponseEntity.noContent().build();
     }

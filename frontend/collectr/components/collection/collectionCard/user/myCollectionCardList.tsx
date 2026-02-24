@@ -10,10 +10,15 @@ import { collectionService } from "@/lib/collection-service";
 import { useAuth } from "@/contexts/auth-context";
 import LoginRequiredState from "@/components/collection/emptyState/loginRequiredState";
 import LastEditedEmptyState from "@/components/collection/emptyState/lastEditedEmpty";
+import SearchEmptyState from "@/components/collection/emptyState/searchEmpty";
 
 const itemsPerPage = 6;
 
-export default function MyCollectionCardList() {
+interface MyCollectionCardListProps {
+    searchTerm?: string;
+}
+
+export default function MyCollectionCardList({ searchTerm = "" }: MyCollectionCardListProps) {
     const { isAuthenticated, isLoading: authLoading } = useAuth();
     const [collections, setCollections] = useState<CollectionProps["collection"][]>([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -30,7 +35,7 @@ export default function MyCollectionCardList() {
 
             try {
                 setLoading(true);
-                const data = await collectionService.getUserCollections(currentPage, itemsPerPage);
+                const data = await collectionService.getUserCollections(currentPage, itemsPerPage, searchTerm || undefined);
                 setCollections(data.content);
                 setTotalPages(data.totalPages);
                 setError(null);
@@ -45,7 +50,12 @@ export default function MyCollectionCardList() {
         if (!authLoading) {
             fetchCollections();
         }
-    }, [currentPage, isAuthenticated, authLoading]);
+    }, [currentPage, isAuthenticated, authLoading, searchTerm]);
+
+    // Reset to page 0 when search term changes
+    useEffect(() => {
+        setCurrentPage(0);
+    }, [searchTerm]);
 
     const goToNextPage = () => {
         setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
@@ -79,7 +89,7 @@ export default function MyCollectionCardList() {
         return (
             <div className="w-full max-w-4xl mx-auto">
             <Label className="mb-4 text-lg font-semibold flex">My Collections</Label>
-            <LastEditedEmptyState />
+            {searchTerm ? <SearchEmptyState searchTerm={searchTerm} /> : <LastEditedEmptyState />}
         </div>
         );
     }

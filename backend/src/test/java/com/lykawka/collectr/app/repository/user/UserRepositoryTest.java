@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,7 +82,7 @@ class UserRepositoryTest {
     @Test
     void delete_ShouldRemoveUser() {
         User savedUser = userRepository.save(user);
-        Long userId = savedUser.getId();
+        UUID userId = savedUser.getId();
 
         userRepository.deleteById(userId);
 
@@ -92,7 +93,7 @@ class UserRepositoryTest {
     @Test
     void findById_WhenUserExists_ShouldReturnUser() {
         User savedUser = userRepository.save(user);
-        Long userId = savedUser.getId();
+        UUID userId = savedUser.getId();
 
         Optional<User> found = userRepository.findById(userId);
 

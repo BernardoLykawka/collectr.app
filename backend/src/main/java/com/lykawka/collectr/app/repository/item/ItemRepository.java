@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import com.lykawka.collectr.app.model.item.Item;
 
+import java.util.UUID;
+
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Long>{
-    Page<Item> findAllByCollectionId(Pageable pageable, Long collectionId);
+public interface ItemRepository extends JpaRepository<Item, UUID>{
+    Page<Item> findAllByCollectionId(Pageable pageable, UUID collectionId);
+
+    Page<Item> findAllByCollectionIdAndNameContainingIgnoreCase(Pageable pageable, UUID collectionId, String name);
 
 }

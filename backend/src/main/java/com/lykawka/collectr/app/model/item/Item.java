@@ -5,6 +5,8 @@ import com.lykawka.collectr.app.model.collection.Collection;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
@@ -38,5 +40,6 @@ public class Item extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collectionId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Collection collection;
 }

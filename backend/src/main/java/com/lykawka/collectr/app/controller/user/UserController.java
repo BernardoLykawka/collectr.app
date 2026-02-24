@@ -8,6 +8,7 @@ import com.lykawka.collectr.app.dto.user.UserDTO;
 import com.lykawka.collectr.app.service.user.IUserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Tag(name = "Users")
@@ -55,8 +58,8 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     public ResponseEntity<UserDTO> findById(
-            @Parameter(description = "User id", example = "1")
-            @PathVariable Long id) {
+            @Parameter(description = "User id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id) {
         UserDTO user = userService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
@@ -126,8 +129,8 @@ public class UserController {
         )
     )
     public ResponseEntity<UserDTO> update(
-            @Parameter(description = "User id", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "User id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id,
             @Valid @RequestBody UpdateUserRequest request) {
         UserDTO updated = userService.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
@@ -142,8 +145,8 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "User id", example = "1")
-            @PathVariable Long id) {
+            @Parameter(description = "User id", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable UUID id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -172,5 +175,20 @@ public class UserController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = userService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/me")
+    @Operation(
+        summary = "Get current user",
+        description = "Returns the authenticated user's information based on the JWT token.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<UserDTO> getCurrentUser(HttpServletRequest request) {
+        UUID userId = (UUID) request.getAttribute("userId");
+        UserDTO user = userService.getCurrentUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
